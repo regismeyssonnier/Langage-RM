@@ -60,8 +60,13 @@ main:
 	s bonjour;
 	print s;
 
+	mul a 515 21 fg rm--b;
+	print a;
+
 	int i 2
 	int j 5
+	int w 1
+	int z 5
 	while: fg >= rm--a
 		print --------------------;
 		print rm--a;
@@ -69,6 +74,12 @@ main:
 		j 5
 		while: i < j
 			print |||||||||||||||||;
+			w 1
+			z 5
+			while: w < z
+				print \\\\\\\///////;
+				add w 1;
+			endwhile:
 			add i 1;
 		endwhile:
 		add rm--a 1;

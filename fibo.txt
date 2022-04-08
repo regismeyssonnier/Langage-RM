@@ -1,0 +1,21 @@
+module math :
+
+
+main:
+
+	int fn1 0
+	int fn2 1
+	int f 0
+	int max 16
+	int i 1 
+	while: i <= max
+		f fn2
+		add fn2 fn1;
+		fn1 f
+		add i 1;
+	endwhile:
+
+	print Resultat;
+	print fn1;
+
+return:

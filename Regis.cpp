@@ -34,9 +34,11 @@ deque<T> stack_func;
 
 map<int, int> vinda;
 map<int, int> vindp;
+map<int, int> vindm;
 map<int, int> CONST_INT;
 map<int, double> CONST_DOUBLE;
 map<int, string> CONST_STRING;
+int end_while = 0;
 
 void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 
@@ -52,7 +54,7 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 						
 					}
 					else if (act.type_action[i] == VDOUBLE) {
-						cout << "VDOUBLE" << endl;
+						//cout << "VDOUBLE" << endl;
 						cout << DC[nf].var.double_val[fun] << endl;
 
 					}
@@ -396,6 +398,84 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 			break;
 
 
+		case MUL:
+		{
+			int I = i + 1;
+			int mult = 1;
+			Action act;
+			//cout << "NBparam " << VM[nf].nb_param << endl;
+			for (int j = 0; j < VM[nf].nb_param; j++) {
+
+				if (VM[nf].size_param[j] == 1) {
+					if (VM[nf].type_var_func[j] == INT ) {
+						mult *= get_INT(action, I);
+						//cout << get_INT(action, I) << endl;;
+					}
+					else if (VM[nf].type_var_func[j] == DOUBLE ) {
+						mult *= get_DOUBLE(action, I);
+						//cout << get_DOUBLE(action, I) << endl;;
+					}
+					else if (VM[nf].type_var_func[j] == PNUMBER_INT) {
+						mult *= VM[nf].cint[VM[nf].index_cint++];
+						//cout << VM[nf].cint[VM[nf].index_cint-1] << endl;;
+					}
+					else if (VM[nf].type_var_func[j] == PNUMBER_DOUBLE) {
+						mult *= VM[nf].cint[VM[nf].index_cdouble++];
+						//cout << VM[nf].cint[VM[nf].index_cdouble-1] << endl;;
+					}
+					I++;
+
+				}
+				else if (VM[nf].size_param[j] == 2) {
+					if (VM[nf].type_var_func[j] == INT || VM[nf].type_var_func[j] == VINT) {
+						//cout << get_INT2(action, I) << endl;;
+						mult *= get_INT2(action, I);
+					}
+					else if (VM[nf].type_var_func[j] == DOUBLE || VM[nf].type_var_func[j] == VDOUBLE) {
+						mult *= get_DOUBLE2(action, I);
+						//cout << get_DOUBLE2(action, I) << endl;;
+					}
+
+					I += 2;
+				}
+				else if (VM[nf].size_param[j] == 3) {
+					if (VM[nf].type_var_func[j] == INT || VM[nf].type_var_func[j] == VINT) {
+						//cout << get_INT3(action, I) << endl;;
+						mult *= get_INT3(action, I);
+					}
+					else if (VM[nf].type_var_func[j] == DOUBLE || VM[nf].type_var_func[j] == VDOUBLE) {
+						//cout << get_DOUBLE3(action, I) << endl;;
+						mult *= get_DOUBLE3(action, I);
+					}
+					I+=3;
+				}
+				
+				
+			}
+
+			//cout << "mult " << mult << endl;
+
+			var_class vr;
+			act.type_action.push_back(VM[nf].type_var_func[0]);
+			act.scope.push_back(VM[nf].scope[0]);
+			if (VM[nf].size_param[0] == 1) {
+				Set_Action_all_variable(act, action.num_action[i + 1], -1, -1, mult, mult, "", vr);
+
+			}
+			else if (VM[nf].size_param[0] == 1) {
+				Set_Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, mult, mult, "", vr);
+
+			}
+			else if (VM[nf].size_param[0] == 1) {
+				Set_Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], action.num_action[i + 3], mult, mult, "", vr);
+
+			}
+			
+
+			break;
+		}
+
+
 		case INT: {
 			if (act.type_action[i] == PNUMBER_INT) {
 				//cout << "violate" << endl;
@@ -405,7 +485,29 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 				//cout << VG.integer_val[act.num_action[i]] << endl;
 				//system("pause");
 			}
+			if (act.type_action[i] == SIZE_NUMBER) {
+				int  I = i + 2, I2 = i+1;
+				int ri;
+				double rd;
+				string rs;
+				var_class rv;
+				int typer;
+				if (act.num_action[i] == 1) {
+					Action_all_variable(act, act.num_action[I ], -1, -1, ri, rd, rs, rv, typer);
+					VG.integer_val[act.num_action[I2]] = ri;
 
+				}
+				else if (act.num_action[i] == 2) {
+					Action_all_variable(act, act.num_action[I ], act.num_action[I + 1], -1, ri, rd, rs, rv, typer);
+					VG.integer_val[act.num_action[I2]] = rd;
+				}
+				else if (act.num_action[i] == 3) {
+					Action_all_variable(act, act.num_action[I], act.num_action[I + 1], act.num_action[I + 2], ri, rd, rs, rv, typer);
+					VG.integer_val[act.num_action[I2]] = rd;
+				}
+
+			}
+				
 
 			break;
 
@@ -449,7 +551,7 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 
 int main()
 {
-	std::ifstream input("regis.txt", std::ios::binary);
+	std::ifstream input("fibo.txt", std::ios::binary);
 	//s = vector<unsigned char>(std::istreambuf_iterator<char>(input), {});
 	  
 	bool exec = false;
@@ -1340,12 +1442,12 @@ int main()
 						}
 						else {
 							size_t sz;
-							int v = stod(par[i], &sz);
+							double v = stod(par[i], &sz);
 
 
 							A.param_name.push_back(par[i]);
 							A.type_var_func.push_back(PNUMBER_DOUBLE);
-							A.integer_val.push_back(v);
+							A.double_val.push_back(v);
 						}
 					}
 
@@ -1358,10 +1460,123 @@ int main()
 
 		}
 
+		if (l == "mul") {
+			exec = true;
+
+			string mod;
+			//cout << "l " << l << endl;
+			vector<string> par;
+			while (input >> l) {
+
+				size_t fd = l.find_last_of(";");
+
+				if (fd != string::npos) {
+					if (l.length() != 1) {
+						mod = l.substr(0, fd);
+						par.push_back(mod);
+					}
+					//cout << "add " << mod << endl;
+					break;
+
+				}
+				else {
+					mod = l;
+					par.push_back(mod);
+				}
+
+				//cout <<"add " <<  mod << endl;
+			}
+
+			string modvc;
+			string varvc;
+			size_t fdvc = par[0].find_last_of("--");
+			if (fdvc != string::npos) {
+				modvc = par[0].substr(0, fdvc - 1);
+
+				varvc = par[0].substr(fdvc + 1, l.length());
+				size_t fdvvc = varvc.find_last_of(";");
+				if (fdvvc != string::npos) {
+					varvc = varvc.substr(0, varvc.length() - 1);
+				}
+				//cout << modvc << " -+- " << varvc << endl;
+			}
+
+			/*for (int i = 0; i < par.size(); i++) {
+				cout << "par " << par[i] << endl;
+			}
+			cout << modvc << " " << varvc << endl;*/
+
+			mul M;
+			Register_Action(MUL, MUL, MUL, action.SCOPE);
+			//cout << "mul " << endl;
+			int sz = 0;
+			vector<Action> a1 = Detect_all_variable(par[0], par[0], MUL_VAR, action.SCOPE);
+			for (int i = 0; i < a1.size(); i++) {
+				Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+				//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
+			}
+			sz += a1.size();
+			bool integer = false;
+			if (a1[a1.size() - 1].type_action[0] == INT || a1[a1.size() - 1].type_action[0] == VINT) {
+				integer = true;
+			}
+			M.type_var_func.push_back(a1[a1.size() - 1].type_action[0]);
+			M.size_param.push_back(a1.size());
+			M.scope.push_back(action.SCOPE);
+			
+			M.nb_param = par.size();
+			for (int i = 1; i < par.size(); i++) {
+				//cout << "--------------" << par [i] << endl;
+				vector<Action> a2 = Detect_all_variable(par[i], par[i], MUL_VAR, action.SCOPE);
+				if (a2.size() > 0) {
+					for (int j = 0; j < a2.size(); j++) {
+						Register_Action(a2[j].action[0], a2[j].type_action[0], a2[j].num_action[0], a2[j].scope[0]);
+
+					}
+					M.type_var_func.push_back(a2[a2.size() - 1].type_action[0]);
+					M.size_param.push_back(a2.size());
+					M.scope.push_back(action.SCOPE);
+					sz += a2.size();
+				}
+				else {
+					if (integer) {
+						size_t sz;
+						int v = stoi(par[i], &sz);
+						
+						M.cint.push_back(v);
+						M.type_var_func.push_back(PNUMBER_INT);
+						M.size_param.push_back(1);
+						M.scope.push_back(action.SCOPE);
+						Register_Action(MUL_VAR, MUL_VAR, 0, action.SCOPE);
+
+					}
+					else {
+						size_t sz;
+						double v = stod(par[i], &sz);
+
+						M.cdouble.push_back(v);
+						M.type_var_func.push_back(PNUMBER_DOUBLE);
+						M.size_param.push_back(1);
+						M.scope.push_back(action.SCOPE);
+						Register_Action(MUL_VAR, MUL_VAR, 0, action.SCOPE);
+
+					}
+					sz++;
+				}
+
+			}
+			M.size_instruction = sz;
+	
+			VM.push_back(M);
+
+
+		}
+
+
 		/*******************************************************/
-
+		
 		if (l == "while:") {
-
+			exec = true;
 			string var1;
 			input >> var1;
 
@@ -1401,14 +1616,16 @@ int main()
 			WR.push_back(w);
 			//cout << a1.action[0] << " " << a1.type_action[0] << " " << a1.num_action[0] << " " << a1.scope[0] << endl;
 			//cout << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
-
+			end_while++;
 		}
 
+		
 		if (l == "endwhile:") {
 			int n = WR.size() - 1;
-			WR[n].inst_end = action.action.size();
+			//cout << n - (n - end_while) - 1 << endl;
+			WR[n - (n-end_while)-1].inst_end = action.action.size();
 			Register_Action(END_WHILE, END_WHILE, 0, action.SCOPE);
-
+			end_while--;
 		}
 
 
@@ -1648,12 +1865,27 @@ int main()
 					//cout << l << endl;
 					string val;
 					input >> val;
-					size_t sz;
-					int v = stoi(val, &sz);
+					
 
-					VG.stack_var_int.push_back(v);
-					CONST_INT[action.action.size()] = v;
-					Register_Action(INT, PNUMBER_INT, ret, action.SCOPE);
+					vector<Action> a1 = Detect_all_variable(val, val, INT, action.SCOPE);
+					if (a1.size() > 0) {
+						Register_Action(INT, SIZE_NUMBER, a1.size(), action.SCOPE);
+						Register_Action(INT, INT, ret, action.SCOPE);
+						for (int i = 0; i < a1.size(); i++) {
+							Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+							//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
+						}
+					}
+					else
+					{
+						size_t sz;
+						int v = stoi(val, &sz);
+						VG.stack_var_int.push_back(v);
+						CONST_INT[action.action.size()] = v;
+						Register_Action(INT, PNUMBER_INT, ret, action.SCOPE);
+					}
+
+					
 
 				}
 				else if (Existe(VG.doubles, l, ret)) {
@@ -1736,6 +1968,7 @@ int main()
 	/***********************/
 	int ind_add = 0;
 	int ind_print = 0;
+	int ind_mul = 0;
 	int svind_add = 0;
 	int svind_print = 0;
 	int ind_while = -1;
@@ -1747,7 +1980,7 @@ int main()
 	/***********************/
 
 	for (int i = 0; i < action.action.size(); i++) {
-		vindp[i] = -1; vinda[i] = -1;
+		vindp[i] = -1; vinda[i] = -1; vindm[i] = -1;
 	}
 
 	for (int i = 0; i < action.action.size();i++) {
@@ -1854,7 +2087,96 @@ int main()
 				cI++;
 			}
 
-			i += cI-1;
+			
+			//cout <<"ind_while " << ind_while << endl;
+			vector<int>param = Condition_pass(i, ind_while);
+			if (WR[ind_while].cond == INF) {
+				if (param[0] < param[1]) {
+					//cout << "in_while" << endl;
+					//ind_add = svind_add;
+					//ind_print = svind_print;
+
+					//i = WR[ind_while].inst_start - 1;
+					i += cI - 1;
+				}
+				else {
+					i = WR[ind_while].inst_end;
+					ind_while--;
+					//if (ind_while >= 0) {
+						
+
+					//}
+
+
+				}
+			}
+			else if (WR[ind_while].cond == INFEQ) {
+				if (param[0] <= param[1]) {
+
+					i += cI - 1;
+				}
+				else {
+					in_while = false;
+					i = WR[ind_while].inst_end;
+					ind_while--;
+					//if (ind_while >= 0) {
+						
+
+					//}
+
+				}
+			}
+			else if (WR[ind_while].cond == SUP) {
+				if (param[0] > param[1]) {
+					i += cI - 1;
+				}
+				else {
+					in_while = false;
+					i = WR[ind_while].inst_end;
+					ind_while--;
+					//if (ind_while >= 0) {
+						
+
+					//}
+
+				}
+			}
+			else if (WR[ind_while].cond == SUPEQ) {
+				if (param[0] >= param[1]) {
+
+					i += cI - 1;
+				}
+				else {
+					in_while = false;
+					i = WR[ind_while].inst_end;
+					ind_while--;
+					//if (ind_while >= 0) {
+						
+
+					//}
+
+				}
+			}
+			else if (WR[ind_while].cond == EQ) {
+				if (param[0] == param[1]) {
+
+					i += cI - 1;
+
+
+				}
+				else {
+					in_while = false;
+					i = WR[ind_while].inst_end;
+					ind_while--;
+					//if (ind_while >= 0) {
+						
+
+					//}
+
+				}
+			}
+			//cout << "ind_while " << ind_while << endl;
+			
 			break;
 		}
 
@@ -1876,6 +2198,9 @@ int main()
 			//cout << "taille " << WR[ind_while].I_start.size() << endl;
 
 			//cout << "INDWHILE " << ind_while << endl; system("pause");
+
+			//cout << "ind_while " << ind_while << endl;
+			//cout << i << endl; system("pause");
 
 			int j = 0;
 			for (int i = 0; i < WR[ind_while].type_param.size(); i++) {
@@ -2272,6 +2597,20 @@ int main()
 			break;
 		}
 
+		case MUL:
+		{
+			//cout << "MUL" << endl;
+			if (vindm[i] == -1) {
+				vindm[i] = ind_mul;
+				ind_mul++;
+
+			}
+			Action_func(action, i, vindm[i], -1, -1, -1);
+			i += VM[vindm[i]].size_instruction - 1;
+			break;
+
+		}
+
 		case INT:
 		{
 			Action_func(action, i, -1, -1, -1, -1);
@@ -2295,7 +2634,8 @@ int main()
 		
 		}
 		
-		
+		//cout << "i " << i << endl;
+		//system("pause");
 		//cout << i << endl;
 
 		/*if (in_while) {

@@ -47,6 +47,11 @@
 #define FUNC_VAR 34
 #define FUNC_VAR2 35
 
+#define MUL 36
+#define MUL_VAR 37
+
+#define SIZE_NUMBER 38
+
 struct Action {
 
 	vector<int> action;
@@ -112,6 +117,20 @@ struct add {
 	vector<string> param_name;
 	vector<int>cinteger_val;
 	vector<double>cdouble_val;
+};
+
+struct mul {
+
+	vector<int> cint;
+	vector<double> cdouble;
+	vector<int> type_var_func;
+	vector<int> size_param;
+	vector<int>scope;
+	int index_cint=0;
+	int index_cdouble = 0;
+	int nb_param = 0;
+	int size_instruction;
+
 };
 
 struct while_rm {
@@ -219,7 +238,7 @@ vector<print> VP;
 vector<index_stack> IS;
 vector<add> VA;
 vector<while_rm> WR;
-
+vector<mul>VM;
 
 
 

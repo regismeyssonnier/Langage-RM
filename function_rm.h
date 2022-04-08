@@ -61,7 +61,7 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 				action.num_action.push_back(ret2);
 				action.scope.push_back(SCOPE);
 				actionv.push_back(action);
-
+				//cout << "VDOUBLE" << endl;
 			
 			}
 			else if (Existe(DC[ret].var.integers, varvc, ret2)) {
@@ -452,6 +452,90 @@ void Action_all_variable(Action act, int ret, int ret2, int ret3, int &ri, doubl
 		
 }
 
+void Set_Action_all_variable(Action act, int ret, int ret2, int ret3, int ri, double rd, string rs, var_class rv) {
+
+
+
+	if (act.SCOPE == 1 || act.SCOPE == 3) {
+
+		if (act.type_action[0] == VDOUBLE) {
+
+			DC[ret].var.double_val[ret2] = rd;
+			
+		}
+		else if (act.type_action[0] == VINT) {
+			DC[ret].var.integer_val[ret2]=ri;
+		
+		}
+		else if (act.type_action[0] == VSTRING) {
+			DC[ret].var.pstring[ret2] = rs;
+			
+		}
+		else if (act.type_action[0] == INT) {
+			VG.integer_val[ret] = ri;
+			
+		}
+		else if (act.type_action[0] == DOUBLE) {
+			VG.double_val[ret] = rd;
+			
+		}
+		else if (act.type_action[0] == STRING) {
+			VG.pstring[ret] = rs;
+			
+		}
+		else {
+			cout << "ERROR 1 : Action_all_variable " << endl;
+			
+		}
+		//cout << "ici " << endl;
+	}
+	else if (act.SCOPE == 4) {
+
+		if (act.type_action[0] == VCLASS) {
+
+
+		}
+		else if (act.type_action[0] == INT) {
+
+			func[ret].var.integer_val[ret2] = ri;
+			
+		}
+		else if (act.type_action[0] == DOUBLE) {
+
+			func[ret].var.double_val[ret2] = rd;
+			
+		}
+		else if (act.type_action[0] == STRING) {
+
+			func[ret].var.pstring[ret2] = rs;
+			
+		}
+
+
+	}
+	else if (act.SCOPE == 5) {
+
+		if (act.type_action[0] == VCLASS) {
+			//rv = DC[dn].func[n].
+		}
+		else if (act.type_action[0] == INT) {
+			DC[ret].func[ret2].var.integer_val[ret3] = ri;
+			
+		}
+		else if (act.type_action[0] == DOUBLE) {
+			DC[ret].func[ret2].var.double_val[ret3] = rd;
+			
+		}
+		else if (act.type_action[0] == STRING) {
+			DC[ret].func[ret2].var.pstring[ret3] = rs;
+			
+		}
+
+	}
+
+
+}
+
 
 /*
 
@@ -548,7 +632,6 @@ if (action.scope[i] == 1 || action.scope[i] == 3) {
 
 
 */
-
 
 
 void while_func(Action action, int I, int& ri, double& rd, string& rs, var_class& rv, int &typer) {
@@ -782,6 +865,109 @@ double get_DOUBLE3(Action ac, int I) {
 	return rd;
 }
 
+
+vector<int> Condition_pass(int i, int ind_while) {
+
+	Action act;
+	int ri;
+	double rd;
+	string rs;
+	var_class rv;
+	int typer;
+
+	vector<int>param;
+	//cout << "taille " << WR[ind_while].type_param.size() << endl;
+	//cout << "taille " << WR[ind_while].nb_by_param.size() << endl;
+	//cout << "taille " << WR[ind_while].I_start.size() << endl;
+
+	//cout << "INDWHILE " << ind_while << endl; system("pause");
+
+	int j = 0;
+	for (int i = 0; i < WR[ind_while].type_param.size(); i++) {
+		//cout << WR[ind_while].type_param[i] << endl;
+		if (WR[ind_while].type_param[i] == VCLASS) {
+			if (WR[ind_while].type_param[i + 1] == VINT) {
+				action.I_start = WR[ind_while].I_start[j];
+				action.I_end = WR[ind_while].I_end[j];
+				int no = 0;
+				if (WR[ind_while].nb_by_param[j] == 1) {
+					no = get_INT(action, WR[ind_while].I_start[j]);
+				}
+				else if (WR[ind_while].nb_by_param[j] == 2) {
+					no = get_INT2(action, WR[ind_while].I_start[j]);
+				}
+				else if (WR[ind_while].nb_by_param[j] == 3) {
+					no = get_INT3(action, WR[ind_while].I_start[j]);
+				}
+				param.push_back(no);
+				i++;
+				j++;
+			}
+			else if (WR[ind_while].type_param[i + 1] == VDOUBLE) {
+				action.I_start = WR[ind_while].I_start[j];
+				action.I_end = WR[ind_while].I_end[j];
+				int no = 0;
+				if (WR[ind_while].nb_by_param[j] == 1) {
+					no = get_DOUBLE(action, WR[ind_while].I_start[j]);
+				}
+				else if (WR[ind_while].nb_by_param[j] == 2) {
+					no = get_DOUBLE2(action, WR[ind_while].I_start[j]);
+				}
+				else if (WR[ind_while].nb_by_param[j] == 3) {
+					no = get_DOUBLE3(action, WR[ind_while].I_start[j]);
+				}
+				param.push_back(no);
+				i++;
+				j++;
+			}
+
+
+		}
+		else if (WR[ind_while].type_param[i] == INT) {
+			action.I_start = WR[ind_while].I_start[j];
+			action.I_end = WR[ind_while].I_end[j];
+			int no = 0;
+			if (WR[ind_while].nb_by_param[j] == 1) {
+				no = get_INT(action, WR[ind_while].I_start[j]);
+			}
+			else if (WR[ind_while].nb_by_param[j] == 2) {
+				no = get_INT2(action, WR[ind_while].I_start[j]);
+			}
+			else if (WR[ind_while].nb_by_param[j] == 3) {
+				no = get_INT3(action, WR[ind_while].I_start[j]);
+			}
+			param.push_back(no);
+			j++;
+
+		}
+		else if (WR[ind_while].type_param[i] == DOUBLE) {
+			action.I_start = WR[ind_while].I_start[j];
+			action.I_end = WR[ind_while].I_end[j];
+			int no = 0;
+			if (WR[ind_while].nb_by_param[j] == 1) {
+				//cout << "getdpouble 1 " << endl;
+				no = get_DOUBLE(action, WR[ind_while].I_start[j]);
+			}
+			else if (WR[ind_while].nb_by_param[j] == 2) {
+				no = get_DOUBLE2(action, WR[ind_while].I_start[j]);
+			}
+			else if (WR[ind_while].nb_by_param[j] == 3) {
+				no = get_DOUBLE3(action, WR[ind_while].I_start[j]);
+			}
+			param.push_back(no);
+			j++;
+		}
+
+		//cout << i << " " << j << endl;
+	}
+
+	//cout << "p1 " << param[0] << " p2 " << param[1] << endl;
+	//system("pause");
+
+	return param;
+
+
+}
 
 
 #endif // !FUNCTION_RM_HEADER
