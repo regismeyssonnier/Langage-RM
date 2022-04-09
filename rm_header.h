@@ -52,6 +52,11 @@
 
 #define SIZE_NUMBER 38
 
+constexpr int IF_COND = 39;
+constexpr int END_IF = 40;
+constexpr int IF_PAR = 41;
+
+
 struct Action {
 
 	vector<int> action;
@@ -148,6 +153,21 @@ struct while_rm {
 
 };
 
+struct if_rm {
+
+	int inst_start;
+	int inst_end;
+	int cond;
+	int ind;
+	vector<int> I_start;
+	vector<int> I_end;
+	vector<int> type_param;
+	vector<int>nb_by_param;
+	int exec;
+	bool start = false;
+
+};
+
 struct function {
 
 	Action action;
@@ -188,6 +208,20 @@ struct index_stack {
 	vector<int> type;
 	vector<int> end;
 };
+
+struct Node {
+
+	Node* father;
+	vector<Node*> son;
+	Node* left;
+	Node* right;
+	int indice;
+	int ind_nws = 0;
+
+};
+
+Node* root_if=nullptr, *root_w=nullptr, *father_if=nullptr, *father_w=nullptr, *left_w=nullptr, *right_w=nullptr,*last_fw,*last_if;
+vector<Node*>NW, ANW, NI, ANI;
 
 
 void Register_Action(int a, int t, int n, int s) {
@@ -239,7 +273,7 @@ vector<index_stack> IS;
 vector<add> VA;
 vector<while_rm> WR;
 vector<mul>VM;
-
+vector<if_rm> VI;
 
 
 

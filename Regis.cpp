@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include <fstream>
-
+using namespace std;
 
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@
 using namespace std;
 #include "rm_header.h"
 #include "function_rm.h"
-
+using namespace std;
 
 map<string, string>module;
 
@@ -35,10 +35,22 @@ deque<T> stack_func;
 map<int, int> vinda;
 map<int, int> vindp;
 map<int, int> vindm;
+map<int, int> vindw;
+map<int, int> vindi;
 map<int, int> CONST_INT;
 map<int, double> CONST_DOUBLE;
 map<int, string> CONST_STRING;
 int end_while = 0;
+int end_if = 0;
+int IND_IF = -1;
+int REPR_INDIF = 0;
+int LAST_INDIF = -1;
+int DEPTH_INDIF = 0;
+deque<int>ind_ifd;
+int IND_WHILE = -1;
+int DEPTH_INDW = 0;
+deque<int>ind_wd;
+int REPR_INDW = 0;
 
 void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 
@@ -551,7 +563,7 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 
 int main()
 {
-	std::ifstream input("fibo.txt", std::ios::binary);
+	std::ifstream input("regis.txt", std::ios::binary);
 	//s = vector<unsigned char>(std::istreambuf_iterator<char>(input), {});
 	  
 	bool exec = false;
@@ -1572,6 +1584,94 @@ int main()
 
 		}
 
+		if (l == "if:") {
+			exec = true;
+			string var1;
+			input >> var1;
+
+			string cond;
+			input >> cond;
+
+			string var2;
+			input >> var2;
+
+			if_rm ifr;
+
+			//cout << "iF detect" << endl;
+			vector<Action> a1 = Detect_all_variable(var1, var1, IF_PAR, action.SCOPE);
+			vector<Action> a2 = Detect_all_variable(var2, var2, IF_PAR, action.SCOPE);
+			Register_Action(IF, VI.size(), 2, action.SCOPE);
+			Register_Action(IF, IF, a1.size(), action.SCOPE);
+			Register_Action(IF, IF, a2.size(), action.SCOPE);
+			for (int i = 0; i < a1.size(); i++) {
+				Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+				//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
+			}
+			for (int i = 0; i < a2.size(); i++) {
+				Register_Action(a2[i].action[0], a2[i].type_action[0], a2[i].num_action[0], a2[i].scope[0]);
+				//cout << "reg " << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
+			}
+			//Register_Action(a1.action[0], a1.type_action[0], a1.num_action[0], a1.scope[0]);
+			//Register_Action(a2.action[0], a2.type_action[0], a2.num_action[0], a2.scope[0]);
+			int condt;
+			if (cond == "==")condt = EQ;
+			else if (cond == "<")condt = INF;
+			else if (cond == "<=")condt = INFEQ;
+			else if (cond == ">")condt = SUP;
+			else if (cond == ">=")condt = SUPEQ;
+			Register_Action(IF_COND, condt, 0, action.SCOPE);
+			ifr.cond = condt;
+			ifr.inst_start = action.action.size();
+			VI.push_back(ifr);
+			//cout << a1.action[0] << " " << a1.type_action[0] << " " << a1.num_action[0] << " " << a1.scope[0] << endl;
+			//cout << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
+			end_if++;
+
+			//cout << "error" << endl;
+			Node* n = new Node();
+			n->indice = REPR_INDIF;
+			n->father = father_if;
+			ANI.push_back(n);
+			if (father_if != nullptr) {
+				father_if->son.push_back(n);
+				father_if = n;
+			}
+			else {
+				father_if = n;
+			}
+			//cout << "error pass " << endl;
+
+			ind_ifd.push_front(REPR_INDIF);
+			IND_IF++;
+			REPR_INDIF++;
+			DEPTH_INDIF++;
+			
+		}
+
+		if (l == "endif:") {
+			int n = VI.size() - 1;
+			//cout << n - (n - end_if) - 1 << endl;
+			int u = n - (n - end_if) - 1;
+			
+			VI[IND_IF].inst_end = action.action.size();
+			//cout << "INDif " << IND_IF << endl;
+			//system("pause");
+			// 
+			last_if = father_if;
+			father_if = father_if->father;
+			if (father_if == nullptr) {
+				NI.push_back(last_if);
+			}
+
+			IND_IF = ind_ifd.front();
+			ind_ifd.pop_front();
+			
+			//cout << "indif " << IND_IF << " " << DEPTH_INDIF << endl;
+			
+			Register_Action(END_IF, END_IF, 0, action.SCOPE);
+			end_if--;
+		}
+
 
 		/*******************************************************/
 		
@@ -1617,15 +1717,54 @@ int main()
 			//cout << a1.action[0] << " " << a1.type_action[0] << " " << a1.num_action[0] << " " << a1.scope[0] << endl;
 			//cout << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
 			end_while++;
+
+			//cout << "while" << endl;
+			
+			//cout << "error" << endl;
+			Node* n = new Node();
+			n->indice = REPR_INDW;
+			n->father = father_w;
+			ANW.push_back(n);
+			if (father_w != nullptr) {
+				father_w->son.push_back(n);
+				father_w = n;
+			}
+			else {
+				father_w = n;
+			}
+			//cout << "error pass " << endl;
+
+
+			ind_wd.push_front(REPR_INDW);
+			IND_WHILE++;
+			REPR_INDW++;
+			DEPTH_INDW++;
+
+			
+
 		}
 
 		
 		if (l == "endwhile:") {
 			int n = WR.size() - 1;
 			//cout << n - (n - end_while) - 1 << endl;
-			WR[n - (n-end_while)-1].inst_end = action.action.size();
+			WR[IND_WHILE].inst_end = action.action.size();
+
+			last_fw = father_w;
+			father_w = father_w->father;
+			if (father_w == nullptr) {
+				NW.push_back(last_fw);
+			}
+
+
+			//cout << "end while " << endl;
+			IND_WHILE = ind_wd.front();
+			ind_wd.pop_front();
+
 			Register_Action(END_WHILE, END_WHILE, 0, action.SCOPE);
 			end_while--;
+
+			
 		}
 
 
@@ -1972,17 +2111,47 @@ int main()
 	int svind_add = 0;
 	int svind_print = 0;
 	int ind_while = -1;
+	int ind_while2 = 0;
+	int ind_if = -1;
+	int ind_if2 = 0;
+	int last_indif = -1;
+	int repr_indif = 0;
+	int depth_indif = -1;
+	deque<int> ind_wde;
+	int repr_indw=0;
+	int depth_indw = 0;
+	
 	deque<int> WSTART, WEND;
 	bool in_while = false;
 	
 	bool start_indp = true;
-	
+	int ind_nw = 0;
+	int ind_nws = 0;
+	Node* NWI=nullptr;
+	if(NW.size() > 0)NWI=NW[ind_nw];
+	bool start_nw = true;
+
+	int ind_nif = 0;
+	int ind_nifs = 0;
+	Node* NIF=nullptr;
+	if(NI.size() > 0)NIF= NI[ind_nif];
+	bool start_nif = true;
 	/***********************/
 
 	for (int i = 0; i < action.action.size(); i++) {
 		vindp[i] = -1; vinda[i] = -1; vindm[i] = -1;
+		vindi[i] = -1; vindw[i] = -1;
 	}
 
+	/*for (int i = 0; i < ANW.size(); i++) {
+		cout << "indice " << i << ANW[i]->indice << " " ;
+		Node* f = ANW[i]->father;
+		if (f != nullptr) {
+			cout << ANW[i]->father->indice << endl;
+		}
+	}*/
+
+	//cout << "acrtion " << endl;
 	for (int i = 0; i < action.action.size();i++) {
 		//cout << "action " <<action.action[i] << endl;
 
@@ -1994,6 +2163,261 @@ int main()
 		
 
 		switch (action.action[i]) {
+
+		case IF:
+		{
+			int ri;
+			double rd;
+			string rs;
+			var_class rv;
+			int cI = 3;
+			Action act;
+			int typer;
+
+			svind_add = ind_add;
+			svind_print = ind_print;
+
+			//cout << "IF" << endl;
+			
+			int sz1 = action.num_action[i + 1];
+			int sz2 = action.num_action[i + 2];
+			depth_indif++;
+
+			if (vindi[i] == -1) {
+				ind_if2++;
+				vindi[i] = ind_if2;
+			}
+			
+
+			if (start_nif) {
+				NIF->ind_nws = 0;
+				ind_if = NIF->indice;
+				start_nif = false;
+			}
+			else if (NIF->son.size() > 0) {
+				NIF = NIF->son[NIF->ind_nws];
+				ind_if = NIF->indice;
+				//cout << "son " << endl;
+			}
+
+
+			 // action.type_action[i];
+			VI[ind_if].start = true;
+			if (ind_if - 1 >= 0) {
+				VI[ind_if - 1].exec = VI[ind_if - 1].inst_end;
+
+			}
+
+			
+			int I = i + 3;
+			int li = i + 3;
+
+			/*for (int j = I; j < action.action.size(); j++) {
+				cout << "action: " << j << " " << action.action[j] << " " << action.type_action[j] << endl;
+			}*/
+
+			
+			VI[ind_if].I_start.push_back(I);
+			int scope = 0;
+			for (; I < sz1 + li; I++) {
+				while_func(action, I, ri, rd, rs, rv, typer);
+				
+				VI[ind_if].type_param.push_back(action.type_action[I]);
+
+				WSTART.push_back(ri);
+				cI++;
+			}
+			//cout << "type action i2 " << action.type_action[I] << " " << action.type_action[I + 1] << " " << action.type_action[I + 2] << endl;
+			VI[ind_if].I_end.push_back(I);
+			VI[ind_if].nb_by_param.push_back(sz1);
+
+			//cout << "--------------------------------" << endl;
+			li = I;
+			VI[ind_if].I_start.push_back(I);
+			for (; I < sz2 + li; I++) {
+				while_func(action, I, ri, rd, rs, rv, typer);
+				
+
+				VI[ind_if].type_param.push_back(action.type_action[I]);
+				WEND.push_back(rd);
+				cI++;
+			}
+			VI[ind_if].I_end.push_back(I);
+			VI[ind_if].nb_by_param.push_back(sz2);
+
+			//cout << "__________________________________________" << endl;
+
+
+			if (action.action[I] == IF_COND) {
+				cI++;
+			}
+
+
+			//cout <<"ind_while " << ind_while << endl;
+			vector<int>param = Condition_pass(i, ind_if, VI);
+			if (VI[ind_if].cond == INF) {
+				if (param[0] < param[1]) {
+					
+					i += cI - 1;
+				}
+				else {
+					i = VI[ind_if].inst_end;
+					//ind_if--;
+					
+					NIF = NIF->father;
+
+					if (NIF == nullptr) {
+						ind_nif++;
+						if (ind_nif < NI.size())
+							NIF = NI[ind_nif];
+
+						start_nif = true;
+					}
+					else {
+						if (NIF->ind_nws < NIF->son.size() - 1)
+							NIF->ind_nws++;
+					}
+					if (NIF != nullptr)
+						ind_if = NIF->indice;
+
+				}
+			}
+			else if (VI[ind_if].cond == INFEQ) {
+				if (param[0] <= param[1]) {
+
+					i += cI - 1;
+				}
+				else {
+					
+					i = VI[ind_if].inst_end;
+					
+					NIF = NIF->father;
+
+					if (NIF == nullptr) {
+						ind_nif++;
+						if (ind_nif < NI.size())
+							NIF = NI[ind_nif];
+
+						start_nif = true;
+					}
+					else {
+						if (NIF->ind_nws < NIF->son.size() - 1)
+							NIF->ind_nws++;
+					}
+					if (NIF != nullptr)
+						ind_if = NIF->indice;
+
+				}
+			}
+			else if (VI[ind_if].cond == SUP) {
+				if (param[0] > param[1]) {
+					i += cI - 1;
+				}
+				else {
+					
+					i = VI[ind_if].inst_end;
+					
+					NIF = NIF->father;
+
+					if (NIF == nullptr) {
+						ind_nif++;
+						if (ind_nif < NI.size())
+							NIF = NI[ind_nif];
+
+						start_nif = true;
+					}
+					else {
+						if (NIF->ind_nws < NIF->son.size() - 1)
+							NIF->ind_nws++;
+					}
+					if (NIF != nullptr)
+						ind_if = NIF->indice;
+
+				}
+			}
+			else if (VI[ind_if].cond == SUPEQ) {
+				if (param[0] >= param[1]) {
+
+					i += cI - 1;
+				}
+				else {
+					
+					i = VI[ind_if].inst_end;
+					
+					NIF = NIF->father;
+
+					if (NIF == nullptr) {
+						ind_nif++;
+						if (ind_nif < NI.size())
+							NIF = NI[ind_nif];
+
+						start_nif = true;
+					}
+					else {
+						if (NIF->ind_nws < NIF->son.size() - 1)
+							NIF->ind_nws++;
+					}
+					if (NIF != nullptr)
+						ind_if = NIF->indice;
+
+				}
+			}
+			else if (VI[ind_if].cond == EQ) {
+				if (param[0] == param[1]) {
+
+					i += cI - 1;
+
+
+				}
+				else {
+					
+					i = VI[ind_if].inst_end;
+					
+					NIF = NIF->father;
+
+					if (NIF == nullptr) {
+						ind_nif++;
+						if (ind_nif < NI.size())
+							NIF = NI[ind_nif];
+
+						start_nif = true;
+					}
+					else {
+						if (NIF->ind_nws < NIF->son.size() - 1)
+							NIF->ind_nws++;
+					}
+					if (NIF != nullptr)
+						ind_if = NIF->indice;
+
+				}
+			}
+
+
+			break;
+		}
+
+		case END_IF:
+		{
+			if (NIF != nullptr)
+				NIF = NIF->father;
+
+			if (NIF == nullptr) {
+				ind_nif++;
+				if (ind_nif < NI.size())
+					NIF = NI[ind_if];
+
+				start_nif = true;
+			}
+			else {
+				if (NIF->ind_nws < NIF->son.size() - 1)
+					NIF->ind_nws++;
+			}
+			if (NIF != nullptr)
+				ind_if = NIF->indice;
+			
+			//cout << "indif-- " << ind_if << endl;
+			break;
+		}
 
 		case WHILE:
 		{
@@ -2013,7 +2437,41 @@ int main()
 			int sz1 = action.num_action[i + 1];
 			int sz2 = action.num_action[i + 2];
 
-			ind_while++; // action.type_action[i];
+			// action.type_action[i];
+			
+			if (vindw[i] == -1) {
+				vindw[i] = ind_while2;
+				ind_while2++;
+
+			}
+			
+			if (start_nw) {
+				NWI->ind_nws = 0;
+				ind_while = NWI->indice;
+				start_nw = false;
+			}
+			else if (NWI->son.size() > 0) {
+				NWI = NWI->son[NWI->ind_nws];
+				ind_while = NWI->indice;
+				//cout << "son " << endl;
+			}
+			//cout << "indwhile debut " << ind_while << endl;
+
+			/*if (start_nw) {
+				ind_while = NWI->indice;
+				start_nw = false;
+			}
+			else {
+				ind_while = NWI->son[ind_nws]->indice;
+
+			}*/
+			
+			//cout << "size " << ind_wde.size() << endl;
+
+			repr_indw++;
+			depth_indw++;
+
+			//cout << "INDWHILE start " << ind_while << endl;
 			WR[ind_while].start = true;
 			if (ind_while - 1 >= 0) {
 				WR[ind_while-1].exec = WR[ind_while - 1].inst_end;
@@ -2089,7 +2547,7 @@ int main()
 
 			
 			//cout <<"ind_while " << ind_while << endl;
-			vector<int>param = Condition_pass(i, ind_while);
+			vector<int>param = Condition_pass(i, ind_while, WR);
 			if (WR[ind_while].cond == INF) {
 				if (param[0] < param[1]) {
 					//cout << "in_while" << endl;
@@ -2098,10 +2556,28 @@ int main()
 
 					//i = WR[ind_while].inst_start - 1;
 					i += cI - 1;
+					//cout << "continue" << endl;
 				}
 				else {
 					i = WR[ind_while].inst_end;
-					ind_while--;
+					
+					NWI = NWI->father;
+
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
+
+					//cout << "indw inf " << ind_while << endl;
 					//if (ind_while >= 0) {
 						
 
@@ -2118,12 +2594,7 @@ int main()
 				else {
 					in_while = false;
 					i = WR[ind_while].inst_end;
-					ind_while--;
-					//if (ind_while >= 0) {
-						
-
-					//}
-
+					
 				}
 			}
 			else if (WR[ind_while].cond == SUP) {
@@ -2133,11 +2604,23 @@ int main()
 				else {
 					in_while = false;
 					i = WR[ind_while].inst_end;
-					ind_while--;
-					//if (ind_while >= 0) {
-						
+					
+					NWI = NWI->father;
 
-					//}
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
+
 
 				}
 			}
@@ -2149,12 +2632,22 @@ int main()
 				else {
 					in_while = false;
 					i = WR[ind_while].inst_end;
-					ind_while--;
-					//if (ind_while >= 0) {
-						
+				
+					NWI = NWI->father;
 
-					//}
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
 
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
 				}
 			}
 			else if (WR[ind_while].cond == EQ) {
@@ -2167,11 +2660,21 @@ int main()
 				else {
 					in_while = false;
 					i = WR[ind_while].inst_end;
-					ind_while--;
-					//if (ind_while >= 0) {
-						
+					NWI = NWI->father;
 
-					//}
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
 
 				}
 			}
@@ -2290,19 +2793,33 @@ int main()
 					//cout << "in_while" << endl;
 					//ind_add = svind_add;
 					//ind_print = svind_print;
-
+					//cout << "INF " << endl;
 					i = WR[ind_while].inst_start - 1;
+					//cout << "ind_while" << ind_while << endl;
 				}
 				else {
 					in_while = false;
-					ind_while--;
-					/*if (ind_while >= 0) {
-						i = WR[ind_while].inst_start - 1;
-						//ind_print = vindp[ind_while];
-					}*/
 
-					//ind_add = svind_add;
+					if (NWI != nullptr)
+						NWI = NWI->father;
 
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
+
+					//cout << "INDWHILE end " << ind_while << endl;
+					
+					//cout << NWI->ind_nws << endl;
 
 				}
 			}
@@ -2315,14 +2832,23 @@ int main()
 					i = WR[ind_while].inst_start - 1;
 				}
 				else {
-					in_while = false;
-					ind_while--;
-					/*if (ind_while >= 0) {
-						i = WR[ind_while].inst_start - 1;
-						//ind_print = vindp[ind_while];
-					}*/
+					if (NWI != nullptr)
+						NWI = NWI->father;
 
-					//ind_add = svind_add;
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
+					
 
 				}
 			}
@@ -2334,35 +2860,54 @@ int main()
 					i = WR[ind_while].inst_start - 1;
 				}
 				else {
-					in_while = false;
-					ind_while--;
-					/*if (ind_while >= 0) {
-						i = WR[ind_while].inst_start - 1;
-						///ind_print = vindp[ind_while];
-					}*/
+					if (NWI != nullptr)
+						NWI = NWI->father;
 
-					//ind_add = svind_add;
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
+					
+					
 
 				}
 			}
 			else if (WR[ind_while].cond == SUPEQ) {
 				if (param[0] >= param[1]) {
 
-					//ind_add = svind_add;
-					//ind_print = svind_print;
-
 					i = WR[ind_while].inst_start - 1;
 				}
 				else {
-					in_while = false;
-					ind_while--;
+				
+					if(NWI != nullptr)
+						NWI = NWI->father;
+
+					if (NWI == nullptr) {
+						ind_nw++;
+						if(ind_nw < NW.size())
+							NWI = NW[ind_nw];
+						
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size()-1)
+							NWI->ind_nws++;
+					}
+					if(NWI != nullptr)
+						ind_while = NWI->indice;
+
+					//cout << "INDWHILE end " << ind_while << endl;
 					
-					//cout << "supeq " << endl;
-					//system("pause");
-
-
-					//ind_add = svind_add;
-
+					
 				}
 			}
 			else if (WR[ind_while].cond == EQ) {
@@ -2375,18 +2920,27 @@ int main()
 
 				}
 				else {
-					in_while = false;
-					ind_while--;
-					/*if (ind_while >= 0) {
-						i = WR[ind_while].inst_start - 1;
-						//ind_print = vindp[ind_while];
-					}*/
+					if (NWI != nullptr)
+						NWI = NWI->father;
 
-					//ind_add = svind_add;
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
 
 				}
 			}
-
+			//cout << "ind_while" << ind_while << endl;
+			//cout << "ENDWHILE" << endl;
 			break;
 		}
 
@@ -2634,205 +3188,7 @@ int main()
 		
 		}
 		
-		//cout << "i " << i << endl;
-		//system("pause");
-		//cout << i << endl;
-
-		/*if (in_while) {
-			//cout << "in_while " << i << " " << WR[ind_while].inst_end <<endl;
-
-			if (i == WR[ind_while].inst_end) {
-
-				Action act;
-				int ri;
-				double rd;
-				string rs;
-				var_class rv;
-				int typer;
-
-				vector<int>param;
-				//cout << "taille " << WR[ind_while].type_param.size() << endl;
-				//cout << "taille " << WR[ind_while].nb_by_param.size() << endl;
-				//cout << "taille " << WR[ind_while].I_start.size() << endl;
-				int j = 0;
-				for (int i = 0; i < WR[ind_while].type_param.size(); i++) {
-					cout << WR[ind_while].type_param[i] << endl;
-					if (WR[ind_while].type_param[i] == VCLASS) {
-						if (WR[ind_while].type_param[i+1] == VINT) {
-							action.I_start = WR[ind_while].I_start[j];
-							action.I_end = WR[ind_while].I_end[j];
-							int no = 0;
-							if (WR[ind_while].nb_by_param[j] == 1) {
-								no = get_INT(action, WR[ind_while].I_start[j]);
-							}
-							else if (WR[ind_while].nb_by_param[j] == 2) {
-								no = get_INT2(action, WR[ind_while].I_start[j]);
-							}
-							else if (WR[ind_while].nb_by_param[j] == 3) {
-								no = get_INT3(action, WR[ind_while].I_start[j]);
-							}
-							param.push_back(no);
-							i++;
-							j++;
-						}
-						else if (WR[ind_while].type_param[i+1] == VDOUBLE) {
-							action.I_start = WR[ind_while].I_start[j];
-							action.I_end = WR[ind_while].I_end[j];
-							int no = 0;
-							if (WR[ind_while].nb_by_param[j] == 1) {
-								no = get_DOUBLE(action, WR[ind_while].I_start[j]);
-							}
-							else if (WR[ind_while].nb_by_param[j] == 2) {
-								no = get_DOUBLE2(action, WR[ind_while].I_start[j]);
-							}
-							else if (WR[ind_while].nb_by_param[j] == 3) {
-								no = get_DOUBLE3(action, WR[ind_while].I_start[j]);
-							}
-							param.push_back(no);
-							i++;
-							j++;
-						}
-
-						
-					}
-					else if (WR[ind_while].type_param[i] == INT) {
-						action.I_start = WR[ind_while].I_start[j];
-						action.I_end = WR[ind_while].I_end[j];
-						int no = 0;
-						if (WR[ind_while].nb_by_param[j] == 1){
-							no = get_INT(action, WR[ind_while].I_start[j]);
-						}
-						else if (WR[ind_while].nb_by_param[j] == 2){
-							no = get_INT2(action, WR[ind_while].I_start[j]);
-						}
-						else if (WR[ind_while].nb_by_param[j] == 3){
-							no = get_INT3(action, WR[ind_while].I_start[j]);
-						}
-						param.push_back(no);
-						j++;
-
-					}
-					else if (WR[ind_while].type_param[i] == DOUBLE) {
-						action.I_start = WR[ind_while].I_start[j];
-						action.I_end = WR[ind_while].I_end[j];
-						int no = 0;
-						if (WR[ind_while].nb_by_param[j] == 1) {
-							//cout << "getdpouble 1 " << endl;
-							no = get_DOUBLE(action, WR[ind_while].I_start[j]);
-						}
-						else if (WR[ind_while].nb_by_param[j] == 2) {
-							no = get_DOUBLE2(action, WR[ind_while].I_start[j]);
-						}
-						else if (WR[ind_while].nb_by_param[j] == 3) {
-							no = get_DOUBLE3(action, WR[ind_while].I_start[j]);
-						}
-						param.push_back(no);
-						j++;
-					}
-
-					//cout << i << " " << j << endl;
-				}
-					
-				cout << "p1 " << param[0] << " p2 " << param[1] << endl;
-				//system("pause");
-								
-
-				if (WR[ind_while].cond == INF) {
-					if (param[0] < param[1]) {
-						//cout << "in_while" << endl;
-						//ind_add = svind_add;
-						//ind_print = svind_print;
-
-						i = WR[ind_while].inst_start - 1;
-					}
-					else {
-						in_while = false;
-						ind_while--;
-						
-
-						//ind_add = svind_add;
-						
-
-					}
-				}
-				else if (WR[ind_while].cond == INFEQ) {
-					if (param[0] <= param[1]) {
-						
-						//ind_add = svind_add;
-						//ind_print = svind_print;
-
-						i = WR[ind_while].inst_start - 1;
-					}
-					else {
-						in_while = false;
-						ind_while--;
-						
-
-						//ind_add = svind_add;
-						
-					}
-				}
-				else if (WR[ind_while].cond == SUP) {
-					if (param[0] > param[1]) {
-						//ind_add = svind_add;
-						//ind_print = svind_print;
-
-						i = WR[ind_while].inst_start - 1;
-					}
-					else {
-						in_while = false;
-						ind_while--;
-						
-
-						//ind_add = svind_add;
-						
-					}
-				}
-				else if (WR[ind_while].cond == SUPEQ) {
-					if (param[0] >= param[1]) {
-					
-						//ind_add = svind_add;
-						//ind_print = svind_print;
-
-						i = WR[ind_while].inst_start - 1;
-					}
-					else {
-						in_while = false;
-						ind_while--;
-						cout << "supeq " << endl;
-						system("pause");
-						
-
-						//ind_add = svind_add;
-						
-					}
-				}
-				else if (WR[ind_while].cond == EQ) {
-					if (param[0] == param[1]) {
-						
-						//ind_add = svind_add;
-						//ind_print = svind_print;
-						i = WR[ind_while].inst_start - 1;
-
-						
-					}
-					else {
-						in_while = false;
-						ind_while--;
-						
-
-						//ind_add = svind_add;
-						
-					}
-				}
-
-				cout << "I " << i << endl;
-				system("pause");
-			}
-
-			cout << "end while " << endl;
-
-		}*/
+		
 
 		
 	}

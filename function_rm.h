@@ -865,8 +865,8 @@ double get_DOUBLE3(Action ac, int I) {
 	return rd;
 }
 
-
-vector<int> Condition_pass(int i, int ind_while) {
+template <class T>
+vector<int> Condition_pass(int i, int ind_while, T WR) {
 
 	Action act;
 	int ri;

@@ -79,12 +79,35 @@ main:
 			while: w < z
 				print \\\\\\\///////;
 				add w 1;
+				
 			endwhile:
 			add i 1;
 		endwhile:
 		add rm--a 1;
 		print ---------------;
 	endwhile:
+
+	rm--a 15
+	while: fg >= rm--a
+		print ]]]]]]]]]]]]]]]]];
+		print rm--a;
+		i 2
+		j 5
+		while: i < j
+			print |||||||||||||||||;
+			w 1
+			z 5
+			while: w < z
+				print =============;
+				add w 1;
+			endwhile:
+			add i 1;
+		endwhile:
+		add rm--a 1;
+		print ---------------;
+	endwhile:
+
+	print END;
 	
 return:
 
