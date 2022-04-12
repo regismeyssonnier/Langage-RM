@@ -1,7 +1,7 @@
 # Langage-RM
 
-    Langage rm 
+    Langage rm 👽
 
-Welcome to the first version of **Langage RM**.
+Welcome to the first version of **Langage RM**. 🥇
 
-First version.
+First version. Look at !!! 👓
