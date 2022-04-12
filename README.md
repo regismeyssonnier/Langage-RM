@@ -1,3 +1,7 @@
 # Langage-RM
 
-Look at the WIKI !!!!!!!!!!!
+    Langage rm 
+
+Welcome to the first version of **Langage RM**.
+
+First version.
