@@ -56,6 +56,13 @@ constexpr int IF_COND = 39;
 constexpr int END_IF = 40;
 constexpr int IF_PAR = 41;
 
+constexpr int FV_INT = 42;
+constexpr int FV_DOUBLE = 43;
+constexpr int FV_STRING = 44;
+
+constexpr int DIV = 45;
+constexpr int DIV_VAR = 46;
+
 
 struct Action {
 
@@ -94,6 +101,7 @@ struct Action {
 
 	int I_start;
 	int I_end;
+	int I;
 };
 
 Action action;
@@ -122,6 +130,20 @@ struct add {
 	vector<string> param_name;
 	vector<int>cinteger_val;
 	vector<double>cdouble_val;
+};
+
+struct op_rm {
+
+	vector<int> cint;
+	vector<double> cdouble;
+	vector<int> type_var_func;
+	vector<int> size_param;
+	vector<int>scope;
+	int index_cint = 0;
+	int index_cdouble = 0;
+	int nb_param = 0;
+	int size_instruction;
+
 };
 
 struct mul {
@@ -180,6 +202,8 @@ struct function {
 	vector<string> param_name;
 	string name;
 	vector<add> add_func;
+	vector<mul> mul_func;
+	vector<op_rm> div_func;
 };
 
 
@@ -220,8 +244,21 @@ struct Node {
 
 };
 
+std::ifstream input;
 Node* root_if=nullptr, *root_w=nullptr, *father_if=nullptr, *father_w=nullptr, *left_w=nullptr, *right_w=nullptr,*last_fw,*last_if;
 vector<Node*>NW, ANW, NI, ANI;
+
+var_gen VG;
+var_class VC;
+vector<function> func;
+vector<var_class> DC;
+vector<print> VP;
+vector<index_stack> IS;
+vector<add> VA;
+vector<while_rm> WR;
+vector<mul>VM;
+vector<if_rm> VI;
+vector<op_rm> VD;
 
 
 void Register_Action(int a, int t, int n, int s) {
@@ -230,6 +267,24 @@ void Register_Action(int a, int t, int n, int s) {
 	action.type_action.push_back(t);
 	action.num_action.push_back(n);
 	action.scope.push_back(s);
+
+}
+
+void Register_Func_Action(int nf, int a, int t, int n, int s) {
+
+	func[nf].action.action.push_back(a);
+	func[nf].action.type_action.push_back(t);
+	func[nf].action.num_action.push_back(n);
+	func[nf].action.scope.push_back(s);
+
+}
+
+void Register_Class_Func_Action(int nd, int nf, int a, int t, int n, int s) {
+
+	DC[nd].func[nf].action.action.push_back(a);
+	DC[nd].func[nf].action.type_action.push_back(t);
+	DC[nd].func[nf].action.num_action.push_back(n);
+	DC[nd].func[nf].action.scope.push_back(s);
 
 }
 
@@ -264,16 +319,6 @@ bool Existe(map<string, int> d, string a, int& r) {
 
 
 
-var_gen VG;
-var_class VC;
-vector<function> func;
-vector<var_class> DC;
-vector<print> VP;
-vector<index_stack> IS;
-vector<add> VA;
-vector<while_rm> WR;
-vector<mul>VM;
-vector<if_rm> VI;
 
 
 

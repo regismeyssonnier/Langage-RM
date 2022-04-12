@@ -14,6 +14,7 @@ using namespace std;
 using namespace std;
 #include "rm_header.h"
 #include "function_rm.h"
+#include "op_rm.h"
 using namespace std;
 
 map<string, string>module;
@@ -414,75 +415,240 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 		{
 			int I = i + 1;
 			int mult = 1;
-			Action act;
-			//cout << "NBparam " << VM[nf].nb_param << endl;
-			for (int j = 0; j < VM[nf].nb_param; j++) {
-
-				if (VM[nf].size_param[j] == 1) {
-					if (VM[nf].type_var_func[j] == INT ) {
-						mult *= get_INT(action, I);
-						//cout << get_INT(action, I) << endl;;
-					}
-					else if (VM[nf].type_var_func[j] == DOUBLE ) {
-						mult *= get_DOUBLE(action, I);
-						//cout << get_DOUBLE(action, I) << endl;;
-					}
-					else if (VM[nf].type_var_func[j] == PNUMBER_INT) {
-						mult *= VM[nf].cint[VM[nf].index_cint++];
-						//cout << VM[nf].cint[VM[nf].index_cint-1] << endl;;
-					}
-					else if (VM[nf].type_var_func[j] == PNUMBER_DOUBLE) {
-						mult *= VM[nf].cint[VM[nf].index_cdouble++];
-						//cout << VM[nf].cint[VM[nf].index_cdouble-1] << endl;;
-					}
-					I++;
-
-				}
-				else if (VM[nf].size_param[j] == 2) {
-					if (VM[nf].type_var_func[j] == INT || VM[nf].type_var_func[j] == VINT) {
-						//cout << get_INT2(action, I) << endl;;
-						mult *= get_INT2(action, I);
-					}
-					else if (VM[nf].type_var_func[j] == DOUBLE || VM[nf].type_var_func[j] == VDOUBLE) {
-						mult *= get_DOUBLE2(action, I);
-						//cout << get_DOUBLE2(action, I) << endl;;
-					}
-
-					I += 2;
-				}
-				else if (VM[nf].size_param[j] == 3) {
-					if (VM[nf].type_var_func[j] == INT || VM[nf].type_var_func[j] == VINT) {
-						//cout << get_INT3(action, I) << endl;;
-						mult *= get_INT3(action, I);
-					}
-					else if (VM[nf].type_var_func[j] == DOUBLE || VM[nf].type_var_func[j] == VDOUBLE) {
-						//cout << get_DOUBLE3(action, I) << endl;;
-						mult *= get_DOUBLE3(action, I);
-					}
-					I+=3;
-				}
-				
-				
-			}
-
-			//cout << "mult " << mult << endl;
-
-			var_class vr;
-			act.type_action.push_back(VM[nf].type_var_func[0]);
-			act.scope.push_back(VM[nf].scope[0]);
-			if (VM[nf].size_param[0] == 1) {
-				Set_Action_all_variable(act, action.num_action[i + 1], -1, -1, mult, mult, "", vr);
-
-			}
-			else if (VM[nf].size_param[0] == 1) {
-				Set_Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, mult, mult, "", vr);
-
-			}
-			else if (VM[nf].size_param[0] == 1) {
-				Set_Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], action.num_action[i + 3], mult, mult, "", vr);
-
-			}
 			
+			//cout << " mul NBparam " << act.scope[i] << " " << act.SCOPE <<" "<< act.scope[I] << " " << act.scope[I+1] <<" " << act.scope[I + 2] << endl;
+			
+				
+			if (act.scope[I] == 1 || act.scope[I] == 3) {
+					for (int j = 0; j < VM[nf].nb_param; j++) {
+						//cout << "type " << VM[nf].type_var_func[j] << " " << VM[nf].size_param[j] << endl;
+						if (VM[nf].size_param[j] == 1) {
+							if (VM[nf].type_var_func[j] == INT) {
+								mult *= get_INT(act, I);
+								//cout << "getint " << get_INT(act, I) << " " << act.scope[I] << endl;;
+							}
+							else if (VM[nf].type_var_func[j] == DOUBLE) {
+								mult *= get_DOUBLE(act, I);
+								//cout << "getdouble " << get_DOUBLE(act, I) << " " << act.scope[I] << endl;;
+							}
+							else if (VM[nf].type_var_func[j] == PNUMBER_INT) {
+								mult *= VM[nf].cint[VM[nf].index_cint++];
+								//cout << "pnumberint " << VM[nf].cint[VM[nf].index_cint - 1] << " " << act.scope[I] << endl;;
+							}
+							else if (VM[nf].type_var_func[j] == PNUMBER_DOUBLE) {
+								mult *= VM[nf].cdouble[VM[nf].index_cdouble++];
+								//cout << "pnumberdouble " << VM[nf].cdouble[VM[nf].index_cdouble - 1] << " " << act.scope[I] << endl;;
+							}
+							I++;
+
+						}
+						else if (VM[nf].size_param[j] == 2) {
+							if (VM[nf].type_var_func[j] == INT || VM[nf].type_var_func[j] == VINT) {
+								//cout << "getint2 " << get_INT2(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_INT2(act, I);
+							}
+							else if (VM[nf].type_var_func[j] == DOUBLE || VM[nf].type_var_func[j] == VDOUBLE) {
+								mult *= get_DOUBLE2(act, I);
+								//cout << "getdouble2 " << get_DOUBLE2(act, I) << " " << act.scope[I] << endl;;
+							}
+
+							I += 2;
+						}
+						else if (VM[nf].size_param[j] == 3) {
+							if (VM[nf].type_var_func[j] == INT || VM[nf].type_var_func[j] == VINT || VM[nf].type_var_func[j] == FV_INT) {
+								//cout << "getint3 " << get_INT3(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_INT3(act, I);
+							}
+							else if (VM[nf].type_var_func[j] == DOUBLE || VM[nf].type_var_func[j] == VDOUBLE || VM[nf].type_var_func[j] == FV_DOUBLE) {
+								//cout << "getdouble3 " << get_DOUBLE3(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_DOUBLE3(act, I);
+							}
+							I += 3;
+						}
+					}
+
+					var_class vr;
+					Action act2;
+					act2.type_action.push_back(VM[nf].type_var_func[0]);
+					act2.scope.push_back(VM[nf].scope[0]);
+					act2.SCOPE = VM[nf].scope[0];
+					if (VM[nf].size_param[0] == 1) {
+						Set_Action_all_variable(act2, act.num_action[i + 1], -1, -1, mult, mult, "", vr);
+
+					}
+					else if (VM[nf].size_param[0] == 2) {
+						Set_Action_all_variable(act2, act.num_action[i + 1], act.num_action[i + 2], -1, mult, mult, "", vr);
+
+					}
+					else if (VM[nf].size_param[0] == 3) {
+						Set_Action_all_variable(act2, act.num_action[i + 1], act.num_action[i + 2], act.num_action[i + 3], mult, mult, "", vr);
+
+					}
+
+				
+
+				}
+				else if (act.scope[I] == 4) {// 4
+				
+				nf = act.type_action[i]; fun = act.num_action[i];
+				//cout << "bug 0 " << nf << " " << fun<< " " <<func[nf].mul_func[fun].nb_param << endl;
+				
+					for (int j = 0; j < func[nf].mul_func[fun].nb_param; j++) {
+						//cout << "bug " << func[nf].mul_func[fun].type_var_func[j]<<" " << func[nf].mul_func[fun].size_param[j]<< endl;
+						if (func[nf].mul_func[fun].size_param[j] == 1) {
+							if (func[nf].mul_func[fun].type_var_func[j] == INT) {
+								mult *= get_INT(act, I);
+								//cout << "getint " << get_INT(act, I) << " " << act.scope[I] << endl;;
+							}
+							else if (func[nf].mul_func[fun].type_var_func[j] == DOUBLE) {
+								mult *= get_DOUBLE(act, I);
+								//cout << "getdouble " << get_DOUBLE(act, I) << " " << act.scope[I] << endl;;
+							}
+							else if (func[nf].mul_func[fun].type_var_func[j] == PNUMBER_INT) {
+								mult *= func[nf].mul_func[fun].cint[func[nf].mul_func[fun].index_cint++];
+								//cout << "pnumberint " << func[nf].mul_func[fun].cint[func[nf].mul_func[fun].index_cint - 1] << " " << act.scope[I] << endl;;
+							}
+							else if (func[nf].mul_func[fun].type_var_func[j] == PNUMBER_DOUBLE) {
+								mult *= func[nf].mul_func[fun].cdouble[func[nf].mul_func[fun].index_cdouble++];
+								//cout << "pnumberdouble " << func[nf].mul_func[fun].cdouble[func[nf].mul_func[fun].index_cdouble - 1] << " " << act.scope[I] << endl;;
+							}
+							I++;
+
+						}
+						else if (func[nf].mul_func[fun].size_param[j] == 2) {
+							if (func[nf].mul_func[fun].type_var_func[j] == INT || func[nf].mul_func[fun].type_var_func[j] == VINT) {
+								//cout << "getint2 " << get_INT2(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_INT2(act, I);
+							}
+							else if (func[nf].mul_func[fun].type_var_func[j] == DOUBLE || func[nf].mul_func[fun].type_var_func[j] == VDOUBLE) {
+								mult *= get_DOUBLE2(act, I);
+								//cout << "getdouble2 " << get_DOUBLE2(act, I) << " " << act.scope[I] << endl;;
+							}
+
+							I += 2;
+						}
+						else if (func[nf].mul_func[fun].size_param[j] == 3) {
+							if (func[nf].mul_func[fun].type_var_func[j] == INT || func[nf].mul_func[fun].type_var_func[j] == VINT || func[nf].mul_func[fun].type_var_func[j] == FV_INT) {
+								//cout << "getint3 " << get_INT3(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_INT3(act, I);
+							}
+							else if (func[nf].mul_func[fun].type_var_func[j] == DOUBLE || func[nf].mul_func[fun].type_var_func[j] == VDOUBLE || func[nf].mul_func[fun].type_var_func[j] == FV_DOUBLE) {
+								//cout << "getdouble3 " << get_DOUBLE3(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_DOUBLE3(act, I);
+							}
+							I += 3;
+						}
+
+					}
+
+					var_class vr;
+					Action act2;
+					act2.type_action.push_back(func[nf].mul_func[fun].type_var_func[0]);
+					act2.scope.push_back(func[nf].mul_func[fun].scope[0]);
+					act2.SCOPE = func[nf].mul_func[fun].scope[0];
+					if (func[nf].mul_func[fun].size_param[0] == 1) {
+						Set_Action_all_variable(act2, act.num_action[i + 1], -1, -1, mult, mult, "", vr);
+
+					}
+					else if (func[nf].mul_func[fun].size_param[0] == 2) {
+						Set_Action_all_variable(act2, act.num_action[i + 1], act.num_action[i + 2], -1, mult, mult, "", vr);
+
+					}
+					else if (func[nf].mul_func[fun].size_param[0] == 3) {
+						Set_Action_all_variable(act2, act.num_action[i + 1], act.num_action[i + 2], act.num_action[i + 3], mult, mult, "", vr);
+
+					}
+
+
+				}
+				else if (act.scope[I] == 5) {
+					
+					nf = act.type_action[i]; fun = act.num_action[i]; cfun = act.num_action[i + 1]; I++;
+					//cout << "bug 5 " << nf << " " << fun << " " << cfun << endl;
+					
+					for (int j = 0; j < DC[nf].func[fun].mul_func[cfun].nb_param; j++) {
+						//cout << "bug " << DC[nf].func[fun].mul_func[cfun].type_var_func[j] << " " << DC[nf].func[fun].mul_func[cfun].size_param[j] << endl;
+						if (DC[nf].func[fun].mul_func[cfun].size_param[j] == 1) {
+							if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == INT) {
+								mult *= get_INT(act, I);
+								//cout << "getint " << get_INT(act, I) << " " << act.scope[I] << endl;;
+							}
+							else if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == DOUBLE) {
+								mult *= get_DOUBLE(act, I);
+								//cout << "getdouble " << get_DOUBLE(act, I) << " " << act.scope[I] << endl;;
+							}
+							else if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == PNUMBER_INT) {
+								mult *= DC[nf].func[fun].mul_func[cfun].cint[DC[nf].func[fun].mul_func[cfun].index_cint++];
+								//cout << "pnumberint " << DC[nf].func[fun].mul_func[cfun].cint[DC[nf].func[fun].mul_func[cfun].index_cint - 1] << " " << act.scope[I] << endl;;
+							}
+							else if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == PNUMBER_DOUBLE) {
+								mult *= DC[nf].func[fun].mul_func[cfun].cdouble[DC[nf].func[fun].mul_func[cfun].index_cdouble++];
+								//cout << "pnumberdouble " << DC[nf].func[fun].mul_func[cfun].cdouble[DC[nf].func[fun].mul_func[cfun].index_cdouble - 1] << " " << act.scope[I] << endl;;
+							}
+							I++;
+
+						}
+						else if (DC[nf].func[fun].mul_func[cfun].size_param[j] == 2) {
+							if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == INT || DC[nf].func[fun].mul_func[cfun].type_var_func[j] == VINT) {
+								//cout << "getint2 " << get_INT2(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_INT2(act, I);
+							}
+							else if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == DOUBLE || DC[nf].func[fun].mul_func[cfun].type_var_func[j] == VDOUBLE) {
+								mult *= get_DOUBLE2(act, I);
+								//cout << "getdouble2 " << get_DOUBLE2(act, I) << " " << act.scope[I] << endl;;
+							}
+
+							I += 2;
+						}
+						else if (DC[nf].func[fun].mul_func[cfun].size_param[j] == 3) {
+							if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == INT || DC[nf].func[fun].mul_func[cfun].type_var_func[j] == VINT || DC[nf].func[fun].mul_func[cfun].type_var_func[j] == FV_INT) {
+								///cout << "getint3 " << get_INT3(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_INT3(act, I);
+							}
+							else if (DC[nf].func[fun].mul_func[cfun].type_var_func[j] == DOUBLE || DC[nf].func[fun].mul_func[cfun].type_var_func[j] == VDOUBLE || DC[nf].func[fun].mul_func[cfun].type_var_func[j] == FV_DOUBLE) {
+								//cout << "getdouble3 " << get_DOUBLE3(act, I) << " " << act.scope[I] << endl;;
+								mult *= get_DOUBLE3(act, I);
+							}
+							I += 3;
+						}
+
+					}
+
+					var_class vr;
+					Action act2;
+					act2.type_action.push_back(DC[nf].func[fun].mul_func[cfun].type_var_func[0]);
+					act2.scope.push_back(DC[nf].func[fun].mul_func[cfun].scope[0]);
+					act2.SCOPE = DC[nf].func[fun].mul_func[cfun].scope[0];
+					if (DC[nf].func[fun].mul_func[cfun].size_param[0] == 1) {
+						Set_Action_all_variable(act2, act.num_action[i + 2], -1, -1, mult, mult, "", vr);
+
+					}
+					else if (DC[nf].func[fun].mul_func[cfun].size_param[0] == 2) {
+						Set_Action_all_variable(act2, act.num_action[i + 2], act.num_action[i + 3], -1, mult, mult, "", vr);
+
+					}
+					else if (DC[nf].func[fun].mul_func[cfun].size_param[0] == 3) {
+						Set_Action_all_variable(act2, act.num_action[i + 2], act.num_action[i + 3], act.num_action[i + 4], mult, mult, "", vr);
+
+					}
+
+					action.I = 1;
+				}
+				
+				
+			
+
+		    //cout << "mult " << mult <<  " " << act.SCOPE << endl;
+
+			
+
+			break;
+		}
+
+		case DIV:
+		{
+			div_op(act, i, nf, fun, type, cfun);
+
 
 			break;
 		}
@@ -563,7 +729,7 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 
 int main()
 {
-	std::ifstream input("regis.txt", std::ios::binary);
+	input = ifstream("regis.txt", std::ios::binary);
 	//s = vector<unsigned char>(std::istreambuf_iterator<char>(input), {});
 	  
 	bool exec = false;
@@ -643,7 +809,7 @@ int main()
 			
 			
 			int ret;
-
+			//cout << "print " << mod << " " << action.SCOPE << endl;;
 			if (action.SCOPE == 1 || action.SCOPE == 3) {
 				action.action.push_back(PRINT);
 				if (Existe(VC.var.vclass, modvc, ret)) {
@@ -701,6 +867,7 @@ int main()
 				else if (Existe(VG.doubles, mod, ret)) {
 					action.type_action.push_back(DOUBLE);
 					action.num_action.push_back(ret);
+					//cout << "double " << mod << endl;
 				}
 				else if (Existe(VG.strings, mod, ret)) {
 					action.type_action.push_back(STRING);
@@ -769,6 +936,7 @@ int main()
 					DC[dn].func[n].action.type_action.push_back(DOUBLE);
 					DC[dn].func[n].action.num_action.push_back(ret);
 					DC[dn].func[n].action.scope.push_back(2);
+					//cout << "double class " << mod << endl;
 				}
 				else if (Existe(DC[dn].func[n].var.strings, mod, ret)) {
 					DC[dn].func[n].action.action.push_back(PRINT);
@@ -787,6 +955,7 @@ int main()
 							DC[dn].func[n].action.type_action.push_back(DOUBLE);
 							DC[dn].func[n].action.num_action.push_back(ret2);
 							DC[dn].func[n].action.scope.push_back(2);
+							//cout << "doubles class " << endl;
 						}
 						else if (Existe(DC[ret].var.integers, varvc, ret2)) {
 							//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
@@ -830,7 +999,7 @@ int main()
 					DC[dn].func[n].action.type_action.push_back(DOUBLE);
 					DC[dn].func[n].action.num_action.push_back(DC[dn].func[n].var.double_val.size() - 1);
 					DC[dn].func[n].action.scope.push_back(2);
-					cout << "print doubles " << mod << " " << DC[dn].var.double_val[ret]<< endl;
+					//cout << "print doubles " << mod << " " << DC[dn].var.double_val[ret]<< endl;
 				}
 				else if (Existe(DC[dn].var.strings, mod, ret)) {
 					DC[dn].func[n].var.pstring.push_back(DC[dn].var.pstring[ret]);
@@ -1499,6 +1668,8 @@ int main()
 				//cout <<"add " <<  mod << endl;
 			}
 
+			//cout << "mull " << action.SCOPE << endl;
+
 			string modvc;
 			string varvc;
 			size_t fdvc = par[0].find_last_of("--");
@@ -1519,12 +1690,30 @@ int main()
 			cout << modvc << " " << varvc << endl;*/
 
 			mul M;
-			Register_Action(MUL, MUL, MUL, action.SCOPE);
-			//cout << "mul " << endl;
+			int nf = func.size() - 1;
+			int nd = DC.size() - 1;
+			int nfc =DC[nd].func.size() - 1;
+			if(action.SCOPE == 1 || action.SCOPE == 3)
+				Register_Action(MUL, MUL, MUL, action.SCOPE);
+			else if (action.SCOPE == 4) {
+				Register_Func_Action(nf, MUL, nf,  func[nf].mul_func.size(), action.SCOPE);
+			}
+			else if (action.SCOPE == 5) {
+				Register_Class_Func_Action(nd, nfc, MUL, nd, nfc, action.SCOPE);
+				Register_Class_Func_Action(nd, nfc, MUL, MUL,  DC[nd].func[nfc].mul_func.size(), action.SCOPE);
+			}
+
+			//cout << "mul " << action.SCOPE << endl;
 			int sz = 0;
 			vector<Action> a1 = Detect_all_variable(par[0], par[0], MUL_VAR, action.SCOPE);
 			for (int i = 0; i < a1.size(); i++) {
-				Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+				if (action.SCOPE == 1 || action.SCOPE == 3)
+					Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+				else if (action.SCOPE == 4)
+					Register_Func_Action(nf, a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+				else if (action.SCOPE == 5)
+					Register_Class_Func_Action(nd, nfc, a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+
 				//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
 			}
 			sz += a1.size();
@@ -1542,8 +1731,12 @@ int main()
 				vector<Action> a2 = Detect_all_variable(par[i], par[i], MUL_VAR, action.SCOPE);
 				if (a2.size() > 0) {
 					for (int j = 0; j < a2.size(); j++) {
-						Register_Action(a2[j].action[0], a2[j].type_action[0], a2[j].num_action[0], a2[j].scope[0]);
-
+						if (action.SCOPE == 1 || action.SCOPE == 3)
+							Register_Action(a2[j].action[0], a2[j].type_action[0], a2[j].num_action[0], a2[j].scope[0]);
+						else if (action.SCOPE == 4)
+							Register_Func_Action(nf, a2[j].action[0], a2[j].type_action[0], a2[j].num_action[0], a2[j].scope[0]);
+						else if (action.SCOPE == 5)
+							Register_Class_Func_Action(nd, nfc, a2[j].action[0], a2[j].type_action[0], a2[j].num_action[0], a2[j].scope[0]);
 					}
 					M.type_var_func.push_back(a2[a2.size() - 1].type_action[0]);
 					M.size_param.push_back(a2.size());
@@ -1559,8 +1752,13 @@ int main()
 						M.type_var_func.push_back(PNUMBER_INT);
 						M.size_param.push_back(1);
 						M.scope.push_back(action.SCOPE);
-						Register_Action(MUL_VAR, MUL_VAR, 0, action.SCOPE);
-
+						if (action.SCOPE == 1 || action.SCOPE == 3)
+							Register_Action(MUL_VAR, MUL_VAR, 0, action.SCOPE);
+						else if (action.SCOPE == 4)
+							Register_Func_Action(nf, MUL_VAR, MUL_VAR, 0, action.SCOPE);
+						else if (action.SCOPE == 5)
+							Register_Class_Func_Action(nd, nfc, MUL_VAR, MUL_VAR, 0, action.SCOPE);
+						//cout << "PNUMBER_INT" << endl;
 					}
 					else {
 						size_t sz;
@@ -1570,7 +1768,13 @@ int main()
 						M.type_var_func.push_back(PNUMBER_DOUBLE);
 						M.size_param.push_back(1);
 						M.scope.push_back(action.SCOPE);
-						Register_Action(MUL_VAR, MUL_VAR, 0, action.SCOPE);
+						if (action.SCOPE == 1 || action.SCOPE == 3)
+							Register_Action(MUL_VAR, MUL_VAR, 0, action.SCOPE);
+						else if (action.SCOPE == 4)
+							Register_Func_Action(nf, MUL_VAR, MUL_VAR, 0, action.SCOPE);
+						else if (action.SCOPE == 5)
+							Register_Class_Func_Action(nd, nfc, MUL_VAR, MUL_VAR, 0, action.SCOPE);
+						//cout << "PNUMBER_DOUBLE" << endl;
 
 					}
 					sz++;
@@ -1579,7 +1783,26 @@ int main()
 			}
 			M.size_instruction = sz;
 	
-			VM.push_back(M);
+			if (action.SCOPE == 1 || action.SCOPE == 3)
+				VM.push_back(M);
+			else if (action.SCOPE == 4)
+				func[nf].mul_func.push_back(M);
+			else if (action.SCOPE == 5)
+				DC[nd].func[nfc].mul_func.push_back(M);
+
+		}
+
+		if (l == "div") {
+
+			exec = true;
+
+			int nf = func.size() - 1;
+			int nd = DC.size() - 1;
+			int nfc = DC[nd].func.size() - 1;
+
+			vector<op_rm> opnull;
+
+			Detect_op(DIV, DIV_VAR, VD, (nf == -1)? opnull : func[nf].div_func, (nd == -1 || nfc == -1) ? opnull : DC[nd].func[nfc].div_func);
 
 
 		}
@@ -1842,7 +2065,7 @@ int main()
 				action.action.push_back(FUNCTION);
 				action.type_action.push_back(FUNCTION);
 				action.num_action.push_back(ret);
-				action.scope.push_back(1);
+				action.scope.push_back(action.SCOPE);
 
 				//cout << "function " << l << " " << ret << endl;
 
@@ -3089,6 +3312,9 @@ int main()
 								DC[action.num_action[i]].func[action.num_action[i + 1]].action.num_action[j],
 								2,
 								action.num_action[i + 1]);
+
+							if (action.I > 0)j += action.I;
+							action.I = 0;
 							//cout << "actoin"<< endl;
 						}
 						/*cout << "-------- - " << endl;
@@ -3164,7 +3390,15 @@ int main()
 			break;
 
 		}
+		case DIV:
+		{
+			action.I = 0;
+			Action_func(action, i, -1, -1, -1, -1);
+			i += action.I;
 
+
+			break;
+		}
 		case INT:
 		{
 			Action_func(action, i, -1, -1, -1, -1);

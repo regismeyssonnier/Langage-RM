@@ -123,10 +123,14 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 	}
 	else if (SCOPE == 4) {
 		//
-		//func[n].action.action.push_back(ACTION);
-		
+		//
+		int n = func.size() - 1;
+		int ret2;
 
-		/*if (Existe(func[n].var.vclass, mod, ret)) {
+		//func[n].action.action.push_back(ACTION);
+
+		if (Existe(func[n].var.vclass, mod, ret)) {
+			Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(VCLASS);
 			action.num_action.push_back(ret);
@@ -135,27 +139,36 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 
 			if (Existe(DC[ret].var.doubles, varvc, ret2)) {
 				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
+				Action action;
 				action.action.push_back(ACTION);
 				action.type_action.push_back(VDOUBLE);
 				action.num_action.push_back(ret2);
 				action.scope.push_back(SCOPE);
 				actionv.push_back(action);
+
+				return actionv;
 			}
 			else if (Existe(DC[ret].var.integers, varvc, ret2)) {
 				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
+				Action action;
 				action.action.push_back(ACTION);
 				action.type_action.push_back(VINT);
 				action.num_action.push_back(ret2);
 				action.scope.push_back(SCOPE);
 				actionv.push_back(action);
+
+				return actionv;
 			}
 			else if (Existe(DC[ret].var.strings, varvc, ret2)) {
 				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
+				Action action;
 				action.action.push_back(ACTION);
 				action.type_action.push_back(VSTRING);
 				action.num_action.push_back(ret2);
 				action.scope.push_back(SCOPE);
 				actionv.push_back(action);
+
+				return actionv;
 			}
 			else {
 				cout << "ERROR1 aucune variable de ce nom existe pour cette classe." << endl;
@@ -163,49 +176,68 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 
 
 
-			func[n].action.type_action.push_back(VCLASS);
-			func[n].action.num_action.push_back(ret);
-		}*/
-
-
-		int n = func.size() - 1;
-		Action action;
-		action.action.push_back(ACTION);
-		action.type_action.push_back(FUNC_VAR);
-		action.num_action.push_back(n);
-		action.scope.push_back(SCOPE);
-		actionv.push_back(action);
-
-		 if (Existe(func[n].var.integers, mod, ret)) {
-			 Action action;
-			 action.action.push_back(ACTION);
-			 action.type_action.push_back(INT);
-			 action.num_action.push_back(ret);
-			 action.scope.push_back(SCOPE);
-			 actionv.push_back(action);
+			//func[n].action.type_action.push_back(VCLASS);
+			//func[n].action.num_action.push_back(ret);
+			//func[n].action.scope.push_back(SCOPE);
 		}
-		else if (Existe(func[n].var.doubles, mod, ret)) {
-			 Action action;
-			 action.action.push_back(ACTION);
-			 action.type_action.push_back(DOUBLE);
-			 action.num_action.push_back(n);
-			 action.scope.push_back(SCOPE);
-			 actionv.push_back(action);
-		}
-		else if (Existe(func[n].var.strings, mod, ret)) {
-			 Action action;
-			 action.action.push_back(ACTION);
-			 action.type_action.push_back(STRING);
-			 action.num_action.push_back(ret);
-			 action.scope.push_back(SCOPE);
-			 actionv.push_back(action);
+		else {
+
+
+			
+
+			if (Existe(func[n].var.integers, mod, ret)) {
+				Action action0;
+				action0.action.push_back(ACTION);
+				action0.type_action.push_back(FUNC_VAR);
+				action0.num_action.push_back(n);
+				action0.scope.push_back(SCOPE);
+				actionv.push_back(action0);
+
+				Action action;
+				action.action.push_back(ACTION);
+				action.type_action.push_back(INT);
+				action.num_action.push_back(ret);
+				action.scope.push_back(SCOPE);
+				actionv.push_back(action);
+			}
+			else if (Existe(func[n].var.doubles, mod, ret)) {
+				Action action0;
+				action0.action.push_back(ACTION);
+				action0.type_action.push_back(FUNC_VAR);
+				action0.num_action.push_back(n);
+				action0.scope.push_back(SCOPE);
+				actionv.push_back(action0);
+
+				Action action;
+				action.action.push_back(ACTION);
+				action.type_action.push_back(DOUBLE);
+				action.num_action.push_back(n);
+				action.scope.push_back(SCOPE);
+				actionv.push_back(action);
+			}
+			else if (Existe(func[n].var.strings, mod, ret)) {
+				Action action0;
+				action0.action.push_back(ACTION);
+				action0.type_action.push_back(FUNC_VAR);
+				action0.num_action.push_back(n);
+				action0.scope.push_back(SCOPE);
+				actionv.push_back(action0);
+
+				Action action;
+				action.action.push_back(ACTION);
+				action.type_action.push_back(STRING);
+				action.num_action.push_back(ret);
+				action.scope.push_back(SCOPE);
+				actionv.push_back(action);
+			}
+
 		}
 		
 	}
 	else if (SCOPE == 5) {
 		int dn = DC.size() - 1;
 		int n = DC[dn].func.size() - 1;
-
+		int ret2;
 		/*f(Existe(DC[dn].func[n].var.vclass, mod, ret)) {
 			DC[dn].func[n].action.action.push_back(ACTION);
 			DC[dn].func[n].action.type_action.push_back(VCLASS);
@@ -213,16 +245,73 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 			DC[dn].func[n].action.scope.push_back(2);
 		}
 		else*/
-		Action action;
-		action.action.push_back(ACTION);
-		action.type_action.push_back(FUNC_VAR2);
-		action.num_action.push_back(dn);
-		action.scope.push_back(SCOPE);
-		actionv.push_back(action);
-
 		
 
-		if (Existe(DC[dn].func[n].var.integers, mod, ret)) {
+		
+		if(Existe(DC[dn].func[n].var.vclass, mod, ret)) {
+
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR2);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+			
+			Action action;
+			action.action.push_back(ACTION);
+			action.type_action.push_back(VCLASS);
+			action.num_action.push_back(ret);
+			action.scope.push_back(SCOPE);
+			actionv.push_back(action);
+
+			if (Existe(DC[ret].var.doubles, varvc, ret2)) {
+				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
+				Action action;
+				action.action.push_back(ACTION);
+				action.type_action.push_back(VDOUBLE);
+				action.num_action.push_back(ret2);
+				action.scope.push_back(SCOPE);
+				actionv.push_back(action);
+
+				return actionv;
+			}
+			else if (Existe(DC[ret].var.integers, varvc, ret2)) {
+				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
+				Action action;
+				action.action.push_back(ACTION);
+				action.type_action.push_back(VINT);
+				action.num_action.push_back(ret2);
+				action.scope.push_back(SCOPE);
+				actionv.push_back(action);
+
+				return actionv;
+			}
+			else if (Existe(DC[ret].var.strings, varvc, ret2)) {
+				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
+				Action action;
+				action.action.push_back(ACTION);
+				action.type_action.push_back(VSTRING);
+				action.num_action.push_back(ret2);
+				action.scope.push_back(SCOPE);
+				actionv.push_back(action);
+
+				return actionv;
+			}
+			else {
+				cout << "ERROR1 aucune variable de ce nom existe pour cette classe." << endl;
+			}
+
+
+
+		}
+		else if (Existe(DC[dn].func[n].var.integers, mod, ret)) {
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR2);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+
 			Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(FUNC_VAR);
@@ -232,12 +321,19 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 
 			Action action2;
 			action2.action.push_back(ACTION);
-			action2.type_action.push_back(INT);
+			action2.type_action.push_back(FV_INT);
 			action2.num_action.push_back(ret);
 			action2.scope.push_back(SCOPE);
 			actionv.push_back(action2);
 		}
 		else if (Existe(DC[dn].func[n].var.doubles, mod, ret)) {
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR2);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+
 			Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(FUNC_VAR);
@@ -247,12 +343,19 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 
 			Action action2;
 			action2.action.push_back(ACTION);
-			action2.type_action.push_back(DOUBLE);
+			action2.type_action.push_back(FV_DOUBLE);
 			action2.num_action.push_back(ret);
 			action2.scope.push_back(SCOPE);
 			actionv.push_back(action2);
 		}
 		else if (Existe(DC[dn].func[n].var.strings, mod, ret)) {
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR2);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+
 			Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(FUNC_VAR);
@@ -262,13 +365,20 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 
 			Action action2;
 			action2.action.push_back(ACTION);
-			action2.type_action.push_back(STRING);
+			action2.type_action.push_back(FV_STRING);
 			action2.num_action.push_back(ret);
 			action2.scope.push_back(SCOPE);
 			actionv.push_back(action2);
 		}
 		//---------------------------------------------
 		else if (Existe(DC[dn].var.vclass, modvc, ret)) {
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR2);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+
 			Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(VCLASS);
@@ -281,28 +391,34 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
 				Action action;
 				action.action.push_back(ACTION);
-				action.type_action.push_back(DOUBLE);
+				action.type_action.push_back(VDOUBLE);
 				action.num_action.push_back(ret2);
 				action.scope.push_back(SCOPE);
 				actionv.push_back(action);
+
+			
 			}
 			else if (Existe(DC[ret].var.integers, varvc, ret2)) {
 				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
 				Action action;
 				action.action.push_back(ACTION);
-				action.type_action.push_back(INT);
+				action.type_action.push_back(VINT);
 				action.num_action.push_back(ret2);
 				action.scope.push_back(SCOPE);
 				actionv.push_back(action);
+
+				
 			}
 			else if (Existe(DC[ret].var.strings, varvc, ret2)) {
 				//cout << l.substr(0, fd - 1) << " " << l.substr(fd + 1, l.length()) << endl;
 				Action action;
 				action.action.push_back(ACTION);
-				action.type_action.push_back(STRING);
+				action.type_action.push_back(VSTRING);
 				action.num_action.push_back(ret2);
 				action.scope.push_back(SCOPE);
 				actionv.push_back(action);
+
+				
 			}
 			else {
 				cout << "ERROR5 aucune variable de ce nom existe pour cette classe." << endl;
@@ -311,12 +427,19 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 	
 		}
 		else if (Existe(DC[dn].var.integers, mod, ret)) {
-			Action action;
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+
+			/*Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(FUNC_VAR);
 			action.num_action.push_back(n);
 			action.scope.push_back(SCOPE);
-			actionv.push_back(action);
+			actionv.push_back(action);*/
 			Action action2;
 			action2.action.push_back(ACTION);
 			action2.type_action.push_back(INT);
@@ -325,12 +448,19 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 			actionv.push_back(action2);
 		}
 		else if (Existe(DC[dn].var.doubles, mod, ret)) {
-			Action action;
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+
+			/*Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(FUNC_VAR);
 			action.num_action.push_back(n);
 			action.scope.push_back(SCOPE);
-			actionv.push_back(action);
+			actionv.push_back(action);*/
 			Action action2;
 			action2.action.push_back(ACTION);
 			action2.type_action.push_back(DOUBLE);
@@ -339,12 +469,19 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 			actionv.push_back(action2);
 		}
 		else if (Existe(DC[dn].var.strings, mod, ret)) {
-			Action action;
+			Action action0;
+			action0.action.push_back(ACTION);
+			action0.type_action.push_back(FUNC_VAR);
+			action0.num_action.push_back(dn);
+			action0.scope.push_back(SCOPE);
+			actionv.push_back(action0);
+			
+			/*Action action;
 			action.action.push_back(ACTION);
 			action.type_action.push_back(FUNC_VAR);
 			action.num_action.push_back(n);
 			action.scope.push_back(SCOPE);
-			actionv.push_back(action);
+			actionv.push_back(action);*/
 
 			Action action2;
 			action2.action.push_back(ACTION);
@@ -407,8 +544,22 @@ void Action_all_variable(Action act, int ret, int ret2, int ret3, int &ri, doubl
 	}
 	else if (act.SCOPE == 4) {
 		
-		if (act.type_action[0] == VCLASS) {
-			
+		if (act.type_action[0] == VDOUBLE) {
+
+			rd = DC[ret2].var.double_val[ret3];
+			typer = VDOUBLE;
+
+		}
+		else if (act.type_action[0] == VINT) {
+
+			ri = DC[ret2].var.integer_val[ret3];
+			typer = VINT;
+
+		}
+		else if (act.type_action[0] == VSTRING) {
+
+			rs = DC[ret2].var.pstring[ret3];
+			typer = VSTRING;
 
 		}
 		else if (act.type_action[0] == INT) {
@@ -431,19 +582,40 @@ void Action_all_variable(Action act, int ret, int ret2, int ret3, int &ri, doubl
 	}
 	else if (act.SCOPE == 5) {
 
-		if (act.type_action[0] == VCLASS) {
-			//rv = DC[dn].func[n].
+		if (act.type_action[0] == VDOUBLE) {
+			rd = DC[ret].var.double_val[ret2];
+			typer = VDOUBLE;
+		}
+		else if (act.type_action[0] == VINT) {
+			ri = DC[ret].var.integer_val[ret2];
+			typer = VINT;
+		}
+		else if (act.type_action[0] == VSTRING) {
+			rs = DC[ret].var.pstring[ret2];
+			typer = VSTRING;
+		}
+		else if (act.type_action[0] == FV_INT) {
+			ri = DC[ret].func[ret2].var.integer_val[ret3];
+			typer = FV_INT;
+		}
+		else if (act.type_action[0] == FV_DOUBLE) {
+			rd = DC[ret].func[ret2].var.double_val[ret3];
+			typer = FV_DOUBLE;
+		}
+		else if (act.type_action[0] == FV_STRING) {
+			rs = DC[ret].func[ret2].var.pstring[ret3];
+			typer = FV_INT;
 		}
 		else if (act.type_action[0] == INT) {
-			ri = DC[ret].func[ret2].var.integer_val[ret3];
+			ri = DC[ret].var.integer_val[ret2];
 			typer = INT;
 		}
 		else if (act.type_action[0] == DOUBLE) {
-			rd = DC[ret].func[ret2].var.double_val[ret3];
+			rd = DC[ret].var.double_val[ret2];
 			typer = DOUBLE;
 		}
 		else if (act.type_action[0] == STRING) {
-			rs = DC[ret].func[ret2].var.pstring[ret3];
+			rs = DC[ret].var.pstring[ret2];
 			typer = STRING;
 		}
 
@@ -484,15 +656,28 @@ void Set_Action_all_variable(Action act, int ret, int ret2, int ret3, int ri, do
 			
 		}
 		else {
-			cout << "ERROR 1 : Action_all_variable " << endl;
+			cout << "ERROR 1 :Set Action_all_variable " << endl;
 			
 		}
 		//cout << "ici " << endl;
 	}
 	else if (act.SCOPE == 4) {
 
-		if (act.type_action[0] == VCLASS) {
+		if (act.type_action[0] == VDOUBLE) {
 
+			DC[ret2].var.double_val[ret3] = rd;
+		
+		}
+		else if (act.type_action[0] == VINT) {
+
+			DC[ret2].var.integer_val[ret3] = ri;
+			
+
+		}
+		else if (act.type_action[0] == VSTRING) {
+
+			DC[ret2].var.pstring[ret3] = rs;
+			
 
 		}
 		else if (act.type_action[0] == INT) {
@@ -515,19 +700,40 @@ void Set_Action_all_variable(Action act, int ret, int ret2, int ret3, int ri, do
 	}
 	else if (act.SCOPE == 5) {
 
-		if (act.type_action[0] == VCLASS) {
-			//rv = DC[dn].func[n].
+		if (act.type_action[0] == VDOUBLE) {
+			DC[ret].var.double_val[ret2]= rd;
+			
 		}
-		else if (act.type_action[0] == INT) {
+		else if (act.type_action[0] == VINT) {
+			DC[ret].var.integer_val[ret2] = ri;
+			
+		}
+		else if (act.type_action[0] == VSTRING) {
+			DC[ret].var.pstring[ret2] = rs;
+			
+		}
+		else if (act.type_action[0] == FV_INT) {
 			DC[ret].func[ret2].var.integer_val[ret3] = ri;
 			
 		}
-		else if (act.type_action[0] == DOUBLE) {
+		else if (act.type_action[0] == FV_DOUBLE) {
 			DC[ret].func[ret2].var.double_val[ret3] = rd;
 			
 		}
-		else if (act.type_action[0] == STRING) {
+		else if (act.type_action[0] == FV_STRING) {
 			DC[ret].func[ret2].var.pstring[ret3] = rs;
+			
+		}
+		else if (act.type_action[0] == INT) {
+			DC[ret].var.integer_val[ret2] = ri;
+			
+		}
+		else if (act.type_action[0] == DOUBLE) {
+			DC[ret].var.double_val[ret2] = rd;
+			
+		}
+		else if (act.type_action[0] == STRING) {
+			DC[ret].var.pstring[ret2] = rs;
 			
 		}
 
@@ -536,102 +742,6 @@ void Set_Action_all_variable(Action act, int ret, int ret2, int ret3, int ri, do
 
 }
 
-
-/*
-
-
-
-
-
-if (action.scope[i] == 1 || action.scope[i] == 3) {
-				if (action.type_action[i + 1] == VCLASS) {
-					act.type_action.push_back(action.num_action[i + 2]);
-					act.scope.push_back(action.SCOPE);
-					if (action.type_action[i + 2] == VDOUBLE) {
-
-						Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, ri, rd, rs, rv);
-
-					}
-					else if (action.type_action[i + 1] == VINT) {
-
-						Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, ri, rd, rs, rv);
-
-					}
-					else if (action.type_action[i + 1] == VSTRING) {
-
-						Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, ri, rd, rs, rv);
-
-					}
-
-				}
-				else if (action.type_action[i+1] == INT) {
-					act.type_action.push_back(action.num_action[i + 1]);
-					act.scope.push_back(action.SCOPE);
-
-					cout << "rip " << action.action[i + 1] << " " << action.type_action[i + 1] << " " << action.num_action[i+1] << " " << action.scope[i+1] << endl;
-					Action_all_variable(act, action.num_action[i + 1], -1, -1, ri, rd, rs, rv);
-					cout << "ri " << ri << endl;
-				}
-				else if (action.type_action[i+1] == DOUBLE) {
-					act.type_action.push_back(action.num_action[i + 1]);
-					act.scope.push_back(action.SCOPE);
-
-					cout << "rdp "<< action.action[i + 1] << " " << action.type_action[i + 1] << " " << action.num_action[i+1] << " " << action.scope[i+1] << endl;
-					Action_all_variable(act, action.num_action[i + 1], -1, -1, ri, rd, rs, rv);
-					cout << "rd " << rd << endl;
-				}
-				else if (action.type_action[i+1] == STRING) {
-					act.type_action.push_back(action.num_action[i + 1]);
-					act.scope.push_back(action.SCOPE);
-					Action_all_variable(act, action.num_action[i + 1], -1, -1, ri, rd, rs, rv);
-				}
-
-			}
-			else if (action.scope[i] == 4) {
-				if (action.type_action[i + 1] == FUNC_VAR) {
-					act.type_action.push_back(action.num_action[i + 2]);
-					act.scope.push_back(action.SCOPE);
-					if (action.type_action[i + 2] == INT) {
-						Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, ri, rd, rs, rv);
-					}
-					else if (action.type_action[i + 2] == DOUBLE) {
-						Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, ri, rd, rs, rv);
-					}
-					else if (action.type_action[i + 2] == STRING) {
-						Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], -1, ri, rd, rs, rv);
-					}
-
-				}
-
-			}
-			else if (action.scope[i] == 5) {
-				if (action.type_action[i + 1] == FUNC_VAR2) {
-					if (action.type_action[i + 2] == FUNC_VAR) {
-						act.type_action.push_back(action.num_action[i + 3]);
-						act.scope.push_back(action.SCOPE);
-						if (action.type_action[i + 3] == INT) {
-							Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], action.num_action[i + 3], ri, rd, rs, rv);
-						}
-						else if (action.type_action[i + 3] == DOUBLE) {
-							Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], action.num_action[i + 3], ri, rd, rs, rv);
-						}
-						else if (action.type_action[i + 3] == STRING) {
-							Action_all_variable(act, action.num_action[i + 1], action.num_action[i + 2], action.num_action[i + 3], ri, rd, rs, rv);
-						}
-
-					}
-
-				}
-
-			}
-
-
-
-
-
-
-
-*/
 
 
 void while_func(Action action, int I, int& ri, double& rd, string& rs, var_class& rv, int &typer) {
@@ -767,6 +877,7 @@ int get_INT(Action action, int I) {
 
 	act.type_action.push_back(action.type_action[I]);
 	act.scope.push_back(action.scope[I]);
+	act.SCOPE = action.scope[I];
 
 	//cout << "rip1 " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
 	Action_all_variable(act, action.num_action[I], -1, -1, ri, rd, rs, rv, typer);
@@ -784,7 +895,8 @@ int get_INT2(Action action, int I) {
 	Action act;
 
 	act.type_action.push_back(action.type_action[I+1]);
-	act.scope.push_back(action.scope[I]);
+	act.scope.push_back(action.scope[I+1]);
+	act.SCOPE = action.scope[I+1];
 
 	//cout << "rip2 " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
 	Action_all_variable(act, action.num_action[I], action.num_action[I+1], -1, ri, rd, rs, rv, typer);
@@ -802,7 +914,8 @@ int get_INT3(Action action, int I) {
 	Action act;
 
 	act.type_action.push_back(action.type_action[I+2]);
-	act.scope.push_back(action.scope[I]);
+	act.scope.push_back(action.scope[I+2]);
+	act.SCOPE = action.scope[I+2];
 
 	//cout << "rip3 " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
 	Action_all_variable(act, action.num_action[I], action.num_action[I + 1], action.num_action[I + 2], ri, rd, rs, rv, typer);
@@ -810,7 +923,7 @@ int get_INT3(Action action, int I) {
 	return ri;
 }
 
-double get_DOUBLE(Action ac, int I) {
+double get_DOUBLE(Action action, int I) {
 
 	int ri;
 	double rd;
@@ -821,6 +934,7 @@ double get_DOUBLE(Action ac, int I) {
 
 	act.type_action.push_back(action.type_action[I]);
 	act.scope.push_back(action.scope[I]);
+	act.SCOPE = action.scope[I];
 
 	//cout << "rip " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
 	Action_all_variable(act, action.num_action[I], -1, -1, ri, rd, rs, rv, typer);
@@ -828,7 +942,7 @@ double get_DOUBLE(Action ac, int I) {
 	return rd;
 }
 
-double get_DOUBLE2(Action ac, int I) {
+double get_DOUBLE2(Action action, int I) {
 
 	int ri;
 	double rd;
@@ -838,7 +952,8 @@ double get_DOUBLE2(Action ac, int I) {
 	Action act;
 
 	act.type_action.push_back(action.type_action[I+1]);
-	act.scope.push_back(action.scope[I]);
+	act.scope.push_back(action.scope[I+1]);
+	act.SCOPE = action.scope[I+1];
 
 	//cout << "rip " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
 	Action_all_variable(act, action.num_action[I], action.num_action[I+1], -1, ri, rd, rs, rv, typer);
@@ -847,7 +962,7 @@ double get_DOUBLE2(Action ac, int I) {
 }
 
 
-double get_DOUBLE3(Action ac, int I) {
+double get_DOUBLE3(Action action, int I) {
 
 	int ri;
 	double rd;
@@ -857,7 +972,8 @@ double get_DOUBLE3(Action ac, int I) {
 	Action act;
 
 	act.type_action.push_back(action.type_action[I+2]);
-	act.scope.push_back(action.scope[I]);
+	act.scope.push_back(action.scope[I+2]);
+	act.SCOPE = action.scope[I+2];
 
 	//cout << "rip " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
 	Action_all_variable(act, action.num_action[I], action.num_action[I+1], action.num_action[I+2], ri, rd, rs, rv, typer);

@@ -14,8 +14,13 @@ class: regis:
 		print ca va bordel;
 		double x 1200.256
 		string sg fgreg  ergerg;
-		int wx 30
 		print aze;
+		int wx 30
+		mul aze wx 10;
+		print aze;
+		div aze 10;
+		print aze;
+		
 	return:
 endclass:
 
@@ -27,6 +32,9 @@ func: helloworld( int hgh int aaa ):
 		print s;
 		double d 1000000.02
 		add x 20000;
+		mul x 2;
+		print x;
+		div x 2;
 		print x;
 		print aaa;
 
@@ -61,6 +69,12 @@ main:
 	print s;
 
 	mul a 515 21 fg rm--b;
+	print a;
+
+	mul a 2;
+	print a;
+
+	div a 2;
 	print a;
 
 	int i 2
@@ -106,6 +120,12 @@ main:
 		add rm--a 1;
 		print ---------------;
 	endwhile:
+
+	int ff 1
+	int mm 2
+	if: ff < mm
+		print inf;
+	endif:
 
 	print END;
 	
