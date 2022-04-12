@@ -1,0 +1,137 @@
+module regis meysso :
+
+int vv 8
+double sdfsd 23321.012
+string sy qssqiopjqsopqsoqsjoqs;
+array jkdjf 15 56 56 65 6 56 65  65 65  56:
+
+class: regis:
+	int a 15
+	double b 5.025
+	string w pkfger erpgerpijger;
+	init( )
+	func: helloworld( double aze )
+		print ca va bordel;
+		double x 1200.256
+		string sg fgreg  ergerg;
+		print aze;
+		int wx 30
+		mul aze wx 10;
+		print aze;
+		div aze 10;
+		print aze;
+		
+	return:
+endclass:
+
+func: helloworld( int hgh int aaa ):
+		print ca va;
+		int x 100
+		print x;
+		string s regis le boss;
+		print s;
+		double d 1000000.02
+		add x 20000;
+		mul x 2;
+		print x;
+		div x 2;
+		print x;
+		print aaa;
+
+return:
+
+main:
+	int a 1000
+	print a;
+
+	print hello world;
+	string s heyyy;
+	print s;
+
+	double fg 100.05665
+	print fg;
+
+	helloworld ( 1500 100000000 )
+
+	regis rm
+	rm--helloworld ( 50000.555 )
+	print rm--b;
+	
+	print rm--a;	
+
+	a 220
+	print a;
+
+	fg 20.0
+	print fg;
+
+	s bonjour;
+	print s;
+
+	mul a 515 21 fg rm--b;
+	print a;
+
+	mul a 2;
+	print a;
+
+	div a 2;
+	print a;
+
+	int i 2
+	int j 5
+	int w 1
+	int z 5
+	while: fg >= rm--a
+		print --------------------;
+		print rm--a;
+		i 2
+		j 5
+		while: i < j
+			print |||||||||||||||||;
+			w 1
+			z 5
+			while: w < z
+				print \\\\\\\///////;
+				add w 1;
+				
+			endwhile:
+			add i 1;
+		endwhile:
+		add rm--a 1;
+		print ---------------;
+	endwhile:
+
+	rm--a 15
+	while: fg >= rm--a
+		print ]]]]]]]]]]]]]]]]];
+		print rm--a;
+		i 2
+		j 5
+		while: i < j
+			print |||||||||||||||||;
+			w 1
+			z 5
+			while: w < z
+				print =============;
+				add w 1;
+			endwhile:
+			add i 1;
+		endwhile:
+		add rm--a 1;
+		print ---------------;
+	endwhile:
+
+	int ff 1
+	int mm 2
+	if: ff < mm
+		print inf;
+	endif:
+
+	print END;
+	
+return:
+
+
+
+
+end
