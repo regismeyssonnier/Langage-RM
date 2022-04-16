@@ -112,6 +112,7 @@ vector<Action> Detect_all_variable(string l, string mod, int ACTION, int SCOPE) 
 			action.num_action.push_back(ret);
 			action.scope.push_back(SCOPE);
 			actionv.push_back(action);
+			cout << "STRING " << mod << endl;
 		}
 		else {
 
@@ -980,6 +981,65 @@ double get_DOUBLE3(Action action, int I) {
 
 	return rd;
 }
+
+string get_STRING(Action action, int I) {
+
+	int ri;
+	double rd;
+	string rs;
+	var_class rv;
+	int typer;
+	Action act;
+
+	act.type_action.push_back(action.type_action[I]);
+	act.scope.push_back(action.scope[I]);
+	act.SCOPE = action.scope[I];
+
+	//cout << "rip " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
+	Action_all_variable(act, action.num_action[I], -1, -1, ri, rd, rs, rv, typer);
+
+	return rs;
+}
+
+string get_STRING2(Action action, int I) {
+
+	int ri;
+	double rd;
+	string rs;
+	var_class rv;
+	int typer;
+	Action act;
+
+	act.type_action.push_back(action.type_action[I + 1]);
+	act.scope.push_back(action.scope[I + 1]);
+	act.SCOPE = action.scope[I + 1];
+
+	//cout << "rip " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
+	Action_all_variable(act, action.num_action[I], action.num_action[I + 1], -1, ri, rd, rs, rv, typer);
+
+	return rs;
+}
+
+
+string get_STRING3(Action action, int I) {
+
+	int ri;
+	double rd;
+	string rs;
+	var_class rv;
+	int typer;
+	Action act;
+
+	act.type_action.push_back(action.type_action[I + 2]);
+	act.scope.push_back(action.scope[I + 2]);
+	act.SCOPE = action.scope[I + 2];
+
+	//cout << "rip " << action.action[I] << " " << action.type_action[I] << " " << action.num_action[I] << " " << action.scope[I] << endl;
+	Action_all_variable(act, action.num_action[I], action.num_action[I + 1], action.num_action[I + 2], ri, rd, rs, rv, typer);
+
+	return rs;
+}
+
 
 template <class T>
 vector<int> Condition_pass(int i, int ind_while, T WR) {

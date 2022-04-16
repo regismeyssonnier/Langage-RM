@@ -123,6 +123,17 @@ struct var_gen {
 
 };
 
+struct Node {
+
+	Node* father;
+	vector<Node*> son;
+	Node* left;
+	Node* right;
+	int indice;
+	int ind_nws = 0;
+
+};
+
 struct add {
 	vector<int> integer_val;
 	vector<double> double_val;
@@ -130,6 +141,7 @@ struct add {
 	vector<string> param_name;
 	vector<int>cinteger_val;
 	vector<double>cdouble_val;
+	
 };
 
 struct op_rm {
@@ -175,6 +187,29 @@ struct while_rm {
 
 };
 
+
+//func 
+struct while_structure {
+	Node* root_wf = nullptr, * father_wf = nullptr, * left_wf = nullptr, * right_wf = nullptr, * last_fwf;
+	vector<Node*>NWF, ANWF;
+	vector<while_rm> WR;
+	int IND_WHILE = -1;
+	int DEPTH_INDW = 0;
+	deque<int>ind_wd;
+	int REPR_INDW = 0;
+
+	bool start_indp = true;
+	int ind_nw = 0;
+	int ind_nws = 0;
+	Node* NWI = nullptr;
+	bool start_nw = true;
+
+	int ind_while = -1;
+
+};
+
+
+
 struct if_rm {
 
 	int inst_start;
@@ -204,6 +239,11 @@ struct function {
 	vector<add> add_func;
 	vector<mul> mul_func;
 	vector<op_rm> div_func;
+	while_structure while_struct;
+
+	map<int, int> vinda;
+	int ind_add = 0;
+
 };
 
 
@@ -233,20 +273,13 @@ struct index_stack {
 	vector<int> end;
 };
 
-struct Node {
 
-	Node* father;
-	vector<Node*> son;
-	Node* left;
-	Node* right;
-	int indice;
-	int ind_nws = 0;
-
-};
 
 std::ifstream input;
 Node* root_if=nullptr, *root_w=nullptr, *father_if=nullptr, *father_w=nullptr, *left_w=nullptr, *right_w=nullptr,*last_fw,*last_if;
 vector<Node*>NW, ANW, NI, ANI;
+
+
 
 var_gen VG;
 var_class VC;
@@ -259,6 +292,7 @@ vector<while_rm> WR;
 vector<mul>VM;
 vector<if_rm> VI;
 vector<op_rm> VD;
+
 
 
 void Register_Action(int a, int t, int n, int s) {

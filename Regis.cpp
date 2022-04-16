@@ -15,6 +15,7 @@ using namespace std;
 #include "rm_header.h"
 #include "function_rm.h"
 #include "op_rm.h"
+#include "while_ifrm.h"
 using namespace std;
 
 map<string, string>module;
@@ -361,6 +362,7 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 					sum += func[nf].var.integer_val[func[nf].add_func[fun].integer_val[index_int]];
 					sum2 += func[nf].var.integer_val[func[nf].add_func[fun].integer_val[index_int]];
 					index_int++;
+					
 				}
 				else if (func[nf].add_func[fun].type_var_func[0] == DOUBLE) {
 					sum += func[nf].var.double_val[func[nf].add_func[fun].double_val[index_double]];
@@ -384,6 +386,7 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 						sum += func[nf].add_func[fun].integer_val[index_int];
 						sum2 += func[nf].add_func[fun].integer_val[index_int];
 						index_int++;
+						
 					}
 					else if (func[nf].add_func[fun].type_var_func[i] == PNUMBER_DOUBLE) {
 						sum += func[nf].add_func[fun].double_val[index_double];
@@ -393,12 +396,13 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 
 				}
 
+				
 				if (integer) {
 					func[nf].var.integer_val[func[nf].add_func[fun].integer_val[0]] = sum;
 
 				}
 				else {
-					func[nf].var.double_val[func[nf].add_func[fun].double_val[0]] = sum;
+					func[nf].var.double_val[func[nf].add_func[fun].double_val[0]] = sum2;
 
 				}
 				
@@ -671,17 +675,17 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 				var_class rv;
 				int typer;
 				if (act.num_action[i] == 1) {
-					Action_all_variable(act, act.num_action[I ], -1, -1, ri, rd, rs, rv, typer);
-					VG.integer_val[act.num_action[I2]] = ri;
+					//Action_all_variable(act, act.num_action[I ], -1, -1, ri, rd, rs, rv, typer);
+					VG.integer_val[act.num_action[I2]] = get_INT(act, I);
 
 				}
 				else if (act.num_action[i] == 2) {
-					Action_all_variable(act, act.num_action[I ], act.num_action[I + 1], -1, ri, rd, rs, rv, typer);
-					VG.integer_val[act.num_action[I2]] = rd;
+					//Action_all_variable(act, act.num_action[I ], act.num_action[I + 1], -1, ri, rd, rs, rv, typer);
+					VG.integer_val[act.num_action[I2]] = get_INT2(act, I);
 				}
 				else if (act.num_action[i] == 3) {
-					Action_all_variable(act, act.num_action[I], act.num_action[I + 1], act.num_action[I + 2], ri, rd, rs, rv, typer);
-					VG.integer_val[act.num_action[I2]] = rd;
+					//Action_all_variable(act, act.num_action[I], act.num_action[I + 1], act.num_action[I + 2], ri, rd, rs, rv, typer);
+					VG.integer_val[act.num_action[I2]] = get_INT3(act, I);
 				}
 
 			}
@@ -698,6 +702,28 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 
 				VG.double_val[act.num_action[i]] = CONST_DOUBLE[i];
 			}
+			if (act.type_action[i] == SIZE_NUMBER) {
+				int  I = i + 2, I2 = i + 1;
+				int ri;
+				double rd;
+				string rs;
+				var_class rv;
+				int typer;
+				if (act.num_action[i] == 1) {
+					//Action_all_variable(act, act.num_action[I], -1, -1, ri, rd, rs, rv, typer);
+					VG.double_val[act.num_action[I2]] = get_DOUBLE(act, I);
+
+				}
+				else if (act.num_action[i] == 2) {
+					//Action_all_variable(act, act.num_action[I], act.num_action[I + 1], -1, ri, rd, rs, rv, typer);
+					VG.double_val[act.num_action[I2]] = get_DOUBLE2(act, I);
+				}
+				else if (act.num_action[i] == 3) {
+					//Action_all_variable(act, act.num_action[I], act.num_action[I + 1], act.num_action[I + 2], ri, rd, rs, rv, typer);
+					VG.double_val[act.num_action[I2]] = get_DOUBLE3(act, I);
+				}
+
+			}
 
 			
 			break;
@@ -709,6 +735,29 @@ void Action_func(Action act, int i, int nf, int fun, int type, int cfun) {
 				///VG.pstring[act.num_action[i]] = VG.stack_var_string[0];
 				//VG.stack_var_string.pop_front();
 				VG.pstring[act.num_action[i]] = CONST_STRING[i];
+			}
+			if (act.type_action[i] == SIZE_NUMBER) {
+				int  I = i + 2, I2 = i + 1;
+				int ri;
+				double rd;
+				string rs;
+				var_class rv;
+				int typer;
+				if (act.num_action[i] == 1) {
+					//Action_all_variable(act, act.num_action[I], -1, -1, ri, rd, rs, rv, typer);
+					//cout << "TYPER " << typer << endl;;
+					VG.pstring[act.num_action[I2]] = get_STRING(act, I);
+
+				}
+				else if (act.num_action[i] == 2) {
+					//Action_all_variable(act, act.num_action[I], act.num_action[I + 1], -1, ri, rd, rs, rv, typer);
+					VG.pstring[act.num_action[I2]] = get_STRING3(act, I);
+				}
+				else if (act.num_action[i] == 3) {
+					//Action_all_variable(act, act.num_action[I], act.num_action[I + 1], act.num_action[I + 2], ri, rd, rs, rv, typer);
+					VG.pstring[act.num_action[I2]] = get_STRING3(act, I);
+				}
+
 			}
 
 
@@ -1070,10 +1119,10 @@ int main()
 			if (action.SCOPE == 4) {
 
 				int n = func.size() - 1;
-
+				
 				func[n].var.integer_val.push_back(v);
 				func[n].var.integers[l] = func[n].var.integer_val.size() - 1;
-				Register_Action(INT, INT, func[n].var.integers[l], 4);
+				//Register_Func_Action(n, INT, INT, func[n].var.integers[l], 4);
 
 			}
 			if (action.SCOPE == 5) {
@@ -1590,6 +1639,9 @@ int main()
 					A.param_name.push_back(par[0]);
 					A.type_var_func.push_back(INT);
 					A.integer_val.push_back(ret1);
+
+					
+
 				}
 				else if (Existe(func[n].var.doubles, par[0], ret1)) {
 					func[n].action.type_action.push_back(DOUBLE);
@@ -1900,68 +1952,77 @@ int main()
 		
 		if (l == "while:") {
 			exec = true;
-			string var1;
-			input >> var1;
 
-			string cond;
-			input >> cond;
+			if (action.SCOPE == 3) {
+				string var1;
+				input >> var1;
 
-			string var2;
-			input >> var2;
+				string cond;
+				input >> cond;
 
-			//cout << "var1 " << var1 << " " << " var2 " << var2 << endl;
-			while_rm w;
+				string var2;
+				input >> var2;
 
-			vector<Action> a1 = Detect_all_variable(var1, var1, WHILE_PAR, action.SCOPE);
-			vector<Action> a2 = Detect_all_variable(var2, var2, WHILE_PAR, action.SCOPE);
-			Register_Action(WHILE, WR.size() , 2, action.SCOPE);
-			Register_Action(WHILE, WHILE, a1.size(), action.SCOPE);
-			Register_Action(WHILE, WHILE, a2.size(), action.SCOPE);
-			for (int i = 0; i < a1.size(); i++) {
-				Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
-				//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
+				//cout << "var1 " << var1 << " " << " var2 " << var2 << endl;
+				while_rm w;
+
+				vector<Action> a1 = Detect_all_variable(var1, var1, WHILE_PAR, action.SCOPE);
+				vector<Action> a2 = Detect_all_variable(var2, var2, WHILE_PAR, action.SCOPE);
+				Register_Action(WHILE, WR.size(), 2, action.SCOPE);
+				Register_Action(WHILE, WHILE, a1.size(), action.SCOPE);
+				Register_Action(WHILE, WHILE, a2.size(), action.SCOPE);
+				for (int i = 0; i < a1.size(); i++) {
+					Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+					//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
+				}
+				for (int i = 0; i < a2.size(); i++) {
+					Register_Action(a2[i].action[0], a2[i].type_action[0], a2[i].num_action[0], a2[i].scope[0]);
+					//cout << "reg " << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
+				}
+				//Register_Action(a1.action[0], a1.type_action[0], a1.num_action[0], a1.scope[0]);
+				//Register_Action(a2.action[0], a2.type_action[0], a2.num_action[0], a2.scope[0]);
+				int condt;
+				if (cond == "==")condt = EQ;
+				else if (cond == "<")condt = INF;
+				else if (cond == "<=")condt = INFEQ;
+				else if (cond == ">")condt = SUP;
+				else if (cond == ">=")condt = SUPEQ;
+				Register_Action(WHILE_COND, condt, 0, action.SCOPE);
+				w.cond = condt;
+				w.inst_start = action.action.size();
+				WR.push_back(w);
+				//cout << a1.action[0] << " " << a1.type_action[0] << " " << a1.num_action[0] << " " << a1.scope[0] << endl;
+				//cout << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
+				end_while++;
+
+				//cout << "while" << endl;
+
+				//cout << "error" << endl;
+				Node* n = new Node();
+				n->indice = REPR_INDW;
+				n->father = father_w;
+				ANW.push_back(n);
+				if (father_w != nullptr) {
+					father_w->son.push_back(n);
+					father_w = n;
+				}
+				else {
+					father_w = n;
+				}
+				//cout << "error pass " << endl;
+
+
+				ind_wd.push_front(REPR_INDW);
+				IND_WHILE++;
+				REPR_INDW++;
+				DEPTH_INDW++;
+
 			}
-			for (int i = 0; i < a2.size(); i++) {
-				Register_Action(a2[i].action[0], a2[i].type_action[0], a2[i].num_action[0], a2[i].scope[0]);
-				//cout << "reg " << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
-			}
-			//Register_Action(a1.action[0], a1.type_action[0], a1.num_action[0], a1.scope[0]);
-			//Register_Action(a2.action[0], a2.type_action[0], a2.num_action[0], a2.scope[0]);
-			int condt;
-			if (cond == "==")condt = EQ;
-			else if (cond == "<")condt = INF;
-			else if (cond == "<=")condt = INFEQ;
-			else if (cond == ">")condt = SUP;
-			else if (cond == ">=")condt = SUPEQ;
-			Register_Action(WHILE_COND, condt, 0, action.SCOPE);
-			w.cond = condt;
-			w.inst_start = action.action.size();
-			WR.push_back(w);
-			//cout << a1.action[0] << " " << a1.type_action[0] << " " << a1.num_action[0] << " " << a1.scope[0] << endl;
-			//cout << a2[i].action[0] << " " << a2[i].type_action[0] << " " << a2[i].num_action[0] << " " << a2[i].scope[0] << endl;
-			end_while++;
+			else if (action.SCOPE == 4) {
 
-			//cout << "while" << endl;
-			
-			//cout << "error" << endl;
-			Node* n = new Node();
-			n->indice = REPR_INDW;
-			n->father = father_w;
-			ANW.push_back(n);
-			if (father_w != nullptr) {
-				father_w->son.push_back(n);
-				father_w = n;
-			}
-			else {
-				father_w = n;
-			}
-			//cout << "error pass " << endl;
+				while_rm_op();
 
-
-			ind_wd.push_front(REPR_INDW);
-			IND_WHILE++;
-			REPR_INDW++;
-			DEPTH_INDW++;
+			}
 
 			
 
@@ -1969,25 +2030,34 @@ int main()
 
 		
 		if (l == "endwhile:") {
-			int n = WR.size() - 1;
-			//cout << n - (n - end_while) - 1 << endl;
-			WR[IND_WHILE].inst_end = action.action.size();
 
-			last_fw = father_w;
-			father_w = father_w->father;
-			if (father_w == nullptr) {
-				NW.push_back(last_fw);
+			if (action.SCOPE == 3) {
+				int n = WR.size() - 1;
+				//cout << n - (n - end_while) - 1 << endl;
+				WR[IND_WHILE].inst_end = action.action.size();
+
+				last_fw = father_w;
+				father_w = father_w->father;
+				if (father_w == nullptr) {
+					NW.push_back(last_fw);
+				}
+
+
+				//cout << "end while " << endl;
+				IND_WHILE = ind_wd.front();
+				ind_wd.pop_front();
+
+				Register_Action(END_WHILE, END_WHILE, 0, action.SCOPE);
+				end_while--;
+
+			}
+			else if (action.SCOPE == 4) {
+
+				end_whilerm_op();
+
 			}
 
 
-			//cout << "end while " << endl;
-			IND_WHILE = ind_wd.front();
-			ind_wd.pop_front();
-
-			Register_Action(END_WHILE, END_WHILE, 0, action.SCOPE);
-			end_while--;
-
-			
 		}
 
 
@@ -2253,12 +2323,26 @@ int main()
 				else if (Existe(VG.doubles, l, ret)) {
 					string val;
 					input >> val;
-					size_t sz;
-					double v = stod(val, &sz);
 
-					VG.stack_var_double.push_back(v);
-					CONST_DOUBLE[action.action.size()] = v;
-					Register_Action(DOUBLE, PNUMBER_DOUBLE, ret, action.SCOPE);
+					vector<Action> a1 = Detect_all_variable(val, val, DOUBLE, action.SCOPE);
+					if (a1.size() > 0) {
+						Register_Action(DOUBLE, SIZE_NUMBER, a1.size(), action.SCOPE);
+						Register_Action(DOUBLE, DOUBLE, ret, action.SCOPE);
+						for (int i = 0; i < a1.size(); i++) {
+							Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+							//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
+						}
+					}
+					else
+					{
+						size_t sz;
+						double v = stod(val, &sz);
+
+						VG.stack_var_double.push_back(v);
+						CONST_DOUBLE[action.action.size()] = v;
+						Register_Action(DOUBLE, PNUMBER_DOUBLE, ret, action.SCOPE);
+
+					}
 
 
 				}
@@ -2281,10 +2365,25 @@ int main()
 						}
 
 					}
-					
-					VG.stack_var_string.push_back(mod);
-					CONST_STRING[action.action.size()] = mod;
-					Register_Action(STRING, PNUMBER_STRING, ret, action.SCOPE);
+					//cout << "vvvvvaaaaaaaaarrrrrrrrrr " << mod << endl;
+					vector<Action> a1 = Detect_all_variable(mod, mod, STRING, action.SCOPE);
+					if (a1.size() > 0) {
+						Register_Action(STRING, SIZE_NUMBER, a1.size(), action.SCOPE);
+						Register_Action(STRING, STRING, ret, action.SCOPE);
+						for (int i = 0; i < a1.size(); i++) {
+							Register_Action(a1[i].action[0], a1[i].type_action[0], a1[i].num_action[0], a1[i].scope[0]);
+							//cout << "reg " << a1[i].action[0] << " " << a1[i].type_action[0] << " " << a1[i].num_action[0] << " " << a1[i].scope[0] << endl;
+						}
+					}
+					else
+					{
+
+						VG.stack_var_string.push_back(mod);
+						CONST_STRING[action.action.size()] = mod;
+						Register_Action(STRING, PNUMBER_STRING, ret, action.SCOPE);
+
+					}
+
 				}
 
 
@@ -2815,8 +2914,24 @@ int main()
 					i += cI - 1;
 				}
 				else {
-					in_while = false;
+					
 					i = WR[ind_while].inst_end;
+
+					NWI = NWI->father;
+
+					if (NWI == nullptr) {
+						ind_nw++;
+						if (ind_nw < NW.size())
+							NWI = NW[ind_nw];
+
+						start_nw = true;
+					}
+					else {
+						if (NWI->ind_nws < NWI->son.size() - 1)
+							NWI->ind_nws++;
+					}
+					if (NWI != nullptr)
+						ind_while = NWI->indice;
 					
 				}
 			}
@@ -3251,15 +3366,45 @@ int main()
 				}
 			}
 			catch (string s) {
-				//cout << "Trop de paramètre passé a la fonction " + s << endl;
+				cout << "Trop de paramètre passé a la fonction " + s << endl;
 			}
+			
+
 			//cout << "nb func " << func.size() << endl;
+			int nf = action.num_action[i];
+			for (int j = 0; j < func[nf].action.action.size(); j++) {
+				func[nf].vinda[j] = -1;
+			}
+
+			if (func[nf].while_struct.NWF.size() > 0)func[nf].while_struct.NWI = func[nf].while_struct.NWF[func[nf].while_struct.ind_nw];
 			for (int j = 0; j < func[action.num_action[i]].action.action.size(); j++) {
 				//cout << "func sete " << func[action.num_action[i]].action.num_action[j] << " " << j << endl;
 				//cout << func[action.num_action[i]].action.type_action[j] << endl;
 				//cout << func[action.num_action[i]].action.num_action[j] << endl;
 				//cout << "scope function " << func[action.num_action[i]].action.SCOPE << endl;
-				Action_func(func[action.num_action[i]].action, j, action.num_action[i], func[action.num_action[i]].action.num_action[j], 1, -1);
+
+				if (func[action.num_action[i]].action.action[j] == WHILE) {
+					whilerm_func_exec(func[action.num_action[i]].action, j, action.num_action[i]);
+					
+				}
+				else if (func[action.num_action[i]].action.action[j] == END_WHILE) {
+					end_whilerm_func_exec(func[action.num_action[i]].action, j, action.num_action[i]);
+					
+				}
+				
+				if (func[action.num_action[i]].action.action[j] == ADD) {
+					if (func[action.num_action[i]].vinda[j] == -1) {
+						func[action.num_action[i]].vinda[j] = func[action.num_action[i]].ind_add;
+						func[action.num_action[i]].ind_add++;
+
+					}
+					Action_func(func[action.num_action[i]].action, j, action.num_action[i], func[action.num_action[i]].vinda[j], 1, -1);
+
+				}
+				else
+					Action_func(func[action.num_action[i]].action, j, action.num_action[i], func[action.num_action[i]].action.num_action[j], 1, -1);
+
+				
 
 			}
 

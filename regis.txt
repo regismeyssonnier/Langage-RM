@@ -37,6 +37,13 @@ func: helloworld( int hgh int aaa ):
 		div x 2;
 		print x;
 		print aaa;
+		int wy 1
+		int yz 5
+		while: wy < yz
+			print AAAAAAAAAAAAAAAAAAAA;
+			add wy 1;
+			
+		endwhile:
 
 return:
 
@@ -65,8 +72,17 @@ main:
 	fg 20.0
 	print fg;
 
+	int uio 2;
+	uio a
+	print uio;
+
 	s bonjour;
 	print s;
+
+	string ss sdsdd;
+	print ss;
+	ss s;
+	print ss;
 
 	mul a 515 21 fg rm--b;
 	print a;
